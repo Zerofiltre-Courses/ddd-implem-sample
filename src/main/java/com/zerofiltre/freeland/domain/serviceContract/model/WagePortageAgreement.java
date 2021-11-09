@@ -30,11 +30,11 @@ public class WagePortageAgreement {
     this.endDate = endDate;
   }
 
-  public WagePortageAgreementId getAgreementId() {
+  public WagePortageAgreementId getWagePortageAgreementId() {
     return wagePortageAgreementId;
   }
 
-  public void setAgreementId(WagePortageAgreementId wagePortageAgreementId) {
+  public void setWagePortageAgreementId(WagePortageAgreementId wagePortageAgreementId) {
     this.wagePortageAgreementId = wagePortageAgreementId;
   }
 

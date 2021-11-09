@@ -15,6 +15,7 @@
   <description>Sample Onion architecture project</description>
   <properties>
     <java.version>11</java.version>
+    <mapstruct.version>1.4.2.Final</mapstruct.version>
   </properties>
   <dependencies>
     <dependency>
@@ -35,6 +36,7 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -44,12 +46,12 @@
     <dependency>
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct-processor</artifactId>
-      <version>1.4.1.Final</version>
+      <version>${mapstruct.version}</version>
     </dependency>
     <dependency>
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct</artifactId>
-      <version>1.4.1.Final</version>
+      <version>${mapstruct.version}</version>
     </dependency>
   </dependencies>
 

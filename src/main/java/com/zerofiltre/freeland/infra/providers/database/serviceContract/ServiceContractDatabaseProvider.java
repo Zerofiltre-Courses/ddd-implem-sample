@@ -18,7 +18,7 @@ public class ServiceContractDatabaseProvider implements ServiceContractProvider 
 
   @Override
   public ServiceContract serviceContractFromId(ServiceContractId serviceContractId) {
-    ServiceContractJPA serviceContractJPA = repository.getById(serviceContractId.getContractNumber());
+    ServiceContractJPA serviceContractJPA = repository.findByContractNumber(serviceContractId.getContractNumber());
     return mapper.fromJPA(serviceContractJPA);
   }
 

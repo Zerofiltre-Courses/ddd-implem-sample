@@ -4,8 +4,10 @@ import com.zerofiltre.freeland.domain.Rate;
 import com.zerofiltre.freeland.domain.client.ClientProvider;
 import com.zerofiltre.freeland.domain.client.model.Client;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
+import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
+import java.security.SecureRandom;
 import java.util.Date;
 
 public class StartServiceContract {
@@ -35,6 +37,7 @@ public class StartServiceContract {
     serviceContract.setRate(rate);
     serviceContract.setTerms(terms);
     serviceContract.setStartDate(new Date());
+    serviceContract.setServiceContractId(new ServiceContractId(generateContractNumber()));
 
     serviceContractProvider.registerContract(serviceContract);
     return serviceContract;
@@ -54,11 +57,15 @@ public class StartServiceContract {
       throws ServiceContractException {
     WagePortageAgreement wagePortageAgreement = wagePortageAgreementProvider
         .wagePortageAgreementOfId(wagePortageAgreementId);
-    if (wagePortageAgreement.getAgreementId() == null) {
+    if (wagePortageAgreement.getWagePortageAgreementId() == null) {
       throw new ServiceContractException(
           "There is no wage portage agreement available for" + wagePortageAgreementId.getAgreementNumber());
     }
     return wagePortageAgreement;
+  }
+
+  private String generateContractNumber() {
+    return String.valueOf(new SecureRandom().nextInt(Integer.MAX_VALUE));
   }
 
 

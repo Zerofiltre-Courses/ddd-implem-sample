@@ -1,7 +1,8 @@
 package com.zerofiltre.freeland.infra.providers.database.agency.model;
 
-import com.zerofiltre.freeland.domain.Address;
+import com.zerofiltre.freeland.infra.providers.database.AddressJPA;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -16,6 +17,9 @@ import lombok.NoArgsConstructor;
 public class AgencyJPA {
 
   @Id
+  @GeneratedValue
+  Long id;
+
   private String siren;
   private String name;
 
@@ -23,7 +27,7 @@ public class AgencyJPA {
   private String phoneNumber;
 
   @OneToOne
-  @JoinColumn(name = "address_id", referencedColumnName = "id")
-  private Address address;
+  @JoinColumn(name = "address_db_id")
+  private AddressJPA address;
 
 }

@@ -29,11 +29,11 @@ public class ServiceContract {
     this.endDate = endDate;
   }
 
-  public ServiceContractId getContractId() {
+  public ServiceContractId getServiceContractId() {
     return serviceContractId;
   }
 
-  public void setContractId(ServiceContractId serviceContractId) {
+  public void setServiceContractId(ServiceContractId serviceContractId) {
     this.serviceContractId = serviceContractId;
   }
 

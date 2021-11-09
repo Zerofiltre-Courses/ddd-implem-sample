@@ -1,14 +1,11 @@
 package com.zerofiltre.freeland.infra.providers.database.serviceContract.model;
 
-import com.zerofiltre.freeland.domain.agency.model.AgencyId;
-import com.zerofiltre.freeland.domain.freelancer.model.FreelancerId;
 import com.zerofiltre.freeland.infra.providers.database.agency.model.AgencyJPA;
 import com.zerofiltre.freeland.infra.providers.database.freelancer.model.FreelancerJPA;
 import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -23,13 +20,17 @@ import lombok.NoArgsConstructor;
 public class WagePortageAgreementJPA {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue
+  Long id;
+
   private String agreementNumber;
 
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "client_siren", referencedColumnName = "client_siren")
+  @JoinColumn(name = "freelancer_db_id")
   private FreelancerJPA freelancer;
 
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "agency_db_id")
   private AgencyJPA agency;
 
   private float serviceFeesRate;
