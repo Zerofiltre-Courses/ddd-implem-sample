@@ -5,10 +5,13 @@ import com.zerofiltre.freeland.domain.client.model.Client;
 import com.zerofiltre.freeland.domain.client.model.ClientId;
 import com.zerofiltre.freeland.infra.providers.database.client.mapper.ClientJPAMapper;
 import com.zerofiltre.freeland.infra.providers.database.client.model.ClientJPA;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ClientDatabaseProvider implements ClientProvider {
 
@@ -16,8 +19,9 @@ public class ClientDatabaseProvider implements ClientProvider {
   private final ClientJPAMapper mapper;
 
   @Override
-  public Client clientOfId(ClientId clientId) {
-    return mapper.fromJPA(repository.findBySiren(clientId.getSiren()));
+  public Optional<Client> clientOfId(ClientId clientId) {
+    return repository.findBySiren(clientId.getSiren())
+        .map(mapper::fromJPA);
   }
 
   @Override

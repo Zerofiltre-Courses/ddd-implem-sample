@@ -21,6 +21,7 @@ import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
 import java.util.Date;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -87,8 +88,9 @@ class StartServiceContractTest {
     client.setDescription(FREELANCER_DESCRIPTION);
     client.setPhoneNumber(PHONE_NUMBER);
 
-    when(wagePortageAgreementProvider.wagePortageAgreementOfId(agreementId)).thenReturn(wagePortageAgreement);
-    when(clientProvider.clientOfId(clientId)).thenReturn(client);
+    when(wagePortageAgreementProvider.wagePortageAgreementOfId(agreementId))
+        .thenReturn(Optional.of(wagePortageAgreement));
+    when(clientProvider.clientOfId(clientId)).thenReturn(Optional.of(client));
 
     //when
     serviceContract = startServiceContract.execute(agreementId, client, SERVICE_CONTRACT_TERMS, rate);
@@ -128,7 +130,8 @@ class StartServiceContractTest {
   @DisplayName("Start service contract with non existing agreement throws ServiceContract exception")
   void startServiceContract_mustYieldExceptionIfAgreementDoesNotExist() {
 
-    when(wagePortageAgreementProvider.wagePortageAgreementOfId(agreementId)).thenReturn(wagePortageAgreement);
+    when(wagePortageAgreementProvider.wagePortageAgreementOfId(agreementId))
+        .thenReturn(Optional.empty());
 
     assertThatExceptionOfType(ServiceContractException.class)
         .isThrownBy(() -> startServiceContract.execute(agreementId, client, SERVICE_CONTRACT_TERMS, rate));
@@ -141,12 +144,13 @@ class StartServiceContractTest {
     //given
     wagePortageAgreement.setWagePortageAgreementId(agreementId);
 
-    when(wagePortageAgreementProvider.wagePortageAgreementOfId(agreementId)).thenReturn(wagePortageAgreement);
+    when(wagePortageAgreementProvider.wagePortageAgreementOfId(agreementId))
+        .thenReturn(Optional.of(wagePortageAgreement));
 
     Client mockCreatedClient = new Client();
     mockCreatedClient.setClientId(clientId);
 
-    when(clientProvider.clientOfId(any())).thenReturn(client);
+    when(clientProvider.clientOfId(any())).thenReturn(Optional.empty());
     when(clientProvider.registerClient(any())).thenReturn(mockCreatedClient);
 
     //when

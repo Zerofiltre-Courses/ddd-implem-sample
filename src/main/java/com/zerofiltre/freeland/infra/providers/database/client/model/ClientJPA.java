@@ -2,7 +2,9 @@ package com.zerofiltre.freeland.infra.providers.database.client.model;
 
 import com.zerofiltre.freeland.domain.Address;
 import com.zerofiltre.freeland.infra.providers.database.AddressJPA;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -27,7 +29,7 @@ public class ClientJPA {
   private String description;
   private String phoneNumber;
 
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
   @JoinColumn(name = "address_db_id")
   private AddressJPA address;
 

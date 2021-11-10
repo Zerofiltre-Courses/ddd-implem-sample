@@ -5,10 +5,13 @@ import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement
 import com.zerofiltre.freeland.domain.serviceContract.use_cases.WagePortageAgreementProvider;
 import com.zerofiltre.freeland.infra.providers.database.serviceContract.mapper.WagePortageAgreementJPAMapper;
 import com.zerofiltre.freeland.infra.providers.database.serviceContract.model.WagePortageAgreementJPA;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class WagePortageAgreementDatabaseProvider implements WagePortageAgreementProvider {
 
@@ -16,8 +19,9 @@ public class WagePortageAgreementDatabaseProvider implements WagePortageAgreemen
   private final WagePortageAgreementJPAMapper mapper;
 
   @Override
-  public WagePortageAgreement wagePortageAgreementOfId(WagePortageAgreementId wagePortageAgreementId) {
-    return mapper.fromJPA(repository.findByAgreementNumber(wagePortageAgreementId.getAgreementNumber()));
+  public Optional<WagePortageAgreement> wagePortageAgreementOfId(WagePortageAgreementId wagePortageAgreementId) {
+    return repository.findByAgreementNumber(wagePortageAgreementId.getAgreementNumber())
+        .map(mapper::fromJPA);
   }
 
   @Override

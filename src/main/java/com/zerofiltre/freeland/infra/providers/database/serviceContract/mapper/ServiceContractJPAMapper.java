@@ -4,17 +4,24 @@ import com.zerofiltre.freeland.domain.Rate;
 import com.zerofiltre.freeland.domain.client.model.ClientId;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
+import com.zerofiltre.freeland.infra.providers.database.client.ClientJPARepository;
 import com.zerofiltre.freeland.infra.providers.database.client.model.ClientJPA;
+import com.zerofiltre.freeland.infra.providers.database.serviceContract.ServiceContractJPARepository;
 import com.zerofiltre.freeland.infra.providers.database.serviceContract.model.ServiceContractJPA;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", uses = WagePortageAgreementJPAMapper.class)
 public abstract class ServiceContractJPAMapper {
 
+  @Autowired
+  private ClientJPARepository clientJPARepository;
+  @Autowired
+  private ServiceContractJPARepository serviceContractJPARepository;
 
   @Mappings({
       @Mapping(target = "serviceContractId", source = "contractNumber"),
@@ -33,10 +40,25 @@ public abstract class ServiceContractJPAMapper {
       @Mapping(target = "contractNumber", expression = "java(serviceContract.getServiceContractId().getContractNumber())"),
       @Mapping(target = "ratePrice", expression = "java(serviceContract.getRate().getPrice())"),
       @Mapping(target = "rateCurrency", expression = "java(serviceContract.getRate().getCurrency())"),
-      @Mapping(target = "rateFrequency", expression = "java(serviceContract.getRate().getFrequency())")
+      @Mapping(target = "rateFrequency", expression = "java(serviceContract.getRate().getFrequency())"),
+      @Mapping(target = "client", source = "clientId")
   })
   public abstract ServiceContractJPA toJPA(ServiceContract serviceContract);
 
+  @AfterMapping
+  ServiceContractJPA addId(@MappingTarget ServiceContractJPA result, ServiceContract serviceContract) {
+    if (serviceContract != null) {
+      ServiceContractId serviceContractId = serviceContract.getServiceContractId();
+      if (serviceContractId.getContractNumber() != null) {
+        return serviceContractJPARepository.findByContractNumber(serviceContractId.getContractNumber())
+            .map(serviceContractJPA -> {
+              result.setId(serviceContractJPA.getId());
+              return result;
+            }).orElse(result);
+      }
+    }
+    return result;
+  }
 
   ServiceContractId toServiceContractId(String contractNumber) {
     if (contractNumber == null) {
@@ -49,8 +71,15 @@ public abstract class ServiceContractJPAMapper {
     if (clientJPA == null) {
       return null;
     }
-
     return new ClientId(clientJPA.getSiren(), clientJPA.getName());
   }
+
+  ClientJPA toClientJPA(ClientId clientId) {
+    if (clientId == null) {
+      return null;
+    }
+    return clientJPARepository.findBySiren(clientId.getSiren()).orElse(null);
+  }
+
 
 }

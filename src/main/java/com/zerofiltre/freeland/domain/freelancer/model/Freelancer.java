@@ -1,7 +1,6 @@
 package com.zerofiltre.freeland.domain.freelancer.model;
 
 import com.zerofiltre.freeland.domain.Address;
-import com.zerofiltre.freeland.domain.agency.model.AgencyId;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,6 @@ public class Freelancer {
   private String phoneNumber;
   private Address address;
 
-  private AgencyId agencyId;
   private WagePortageAgreementId wagePortageAgreementId;
   private List<Skill> skills = new ArrayList<>();
 
@@ -22,13 +20,12 @@ public class Freelancer {
   }
 
   public Freelancer(FreelancerId freelancerId, String description, String phoneNumber,
-      Address address, AgencyId agencyId, WagePortageAgreementId wagePortageAgreementId,
+      Address address, WagePortageAgreementId wagePortageAgreementId,
       List<Skill> skills) {
     this.freelancerId = freelancerId;
     this.description = description;
     this.phoneNumber = phoneNumber;
     this.address = address;
-    this.agencyId = agencyId;
     this.wagePortageAgreementId = wagePortageAgreementId;
     this.skills = skills;
   }
@@ -63,14 +60,6 @@ public class Freelancer {
 
   public void setAddress(Address address) {
     this.address = address;
-  }
-
-  public AgencyId getAgencyId() {
-    return agencyId;
-  }
-
-  public void setAgencyId(AgencyId agencyId) {
-    this.agencyId = agencyId;
   }
 
   public WagePortageAgreementId getAgreementId() {

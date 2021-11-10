@@ -5,10 +5,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.zerofiltre.freeland.domain.Rate;
 import com.zerofiltre.freeland.domain.Rate.Currency;
 import com.zerofiltre.freeland.domain.Rate.Frequency;
+import com.zerofiltre.freeland.domain.agency.AgencyProvider;
+import com.zerofiltre.freeland.domain.agency.model.Agency;
 import com.zerofiltre.freeland.domain.agency.model.AgencyId;
 import com.zerofiltre.freeland.domain.client.ClientProvider;
 import com.zerofiltre.freeland.domain.client.model.Client;
 import com.zerofiltre.freeland.domain.client.model.ClientId;
+import com.zerofiltre.freeland.domain.freelancer.FreelancerProvider;
+import com.zerofiltre.freeland.domain.freelancer.model.Freelancer;
 import com.zerofiltre.freeland.domain.freelancer.model.FreelancerId;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
@@ -41,11 +45,15 @@ class StartServiceContractIT {
   public static final String AGENCY_NAME = "agency_name";
   public static final String PHONE_NUMBER = "0658425369";
   public static final String FREELANCER_DESCRIPTION = "Zerofiltre freelancer";
+  public static final String CLIENT_DESCRIPTION = "Hermes Client";
+  public static final String AGENCY_DESCRIPTION = "Procmo Agency";
   StartServiceContract startServiceContract;
   ClientId clientId = new ClientId(CLIENT_SIREN, CLIENT_NAME);
   FreelancerId freelancerId = new FreelancerId(FREELANCER_SIREN, FREELANCER_NAME);
   AgencyId agencyId = new AgencyId(AGENCY_SIREN, AGENCY_NAME);
   Client client = new Client();
+  Freelancer freelancer = new Freelancer();
+  Agency agency = new Agency();
   ServiceContract serviceContract;
   WagePortageAgreement wagePortageAgreement = new WagePortageAgreement();
   Rate rate = new Rate(700, Currency.EUR, Frequency.DAILY);
@@ -56,6 +64,13 @@ class StartServiceContractIT {
   private WagePortageAgreementProvider wagePortageAgreementProvider;
   @Autowired
   private ClientProvider clientProvider;
+
+  @Autowired
+  private AgencyProvider agencyProvider;
+
+  @Autowired
+  private FreelancerProvider freelancerProvider;
+
   @Autowired
   private ServiceContractProvider serviceContractProvider;
 
@@ -80,11 +95,25 @@ class StartServiceContractIT {
     wagePortageAgreement.setTerms(WAGE_PORTAGE_TERMS);
     wagePortageAgreement.setWagePortageAgreementId(new WagePortageAgreementId(generateContractNumber()));
 
+    agency.setAgencyId(agencyId);
+    //client.setAddress(address);
+    agency.setDescription(AGENCY_DESCRIPTION);
+    agency.setPhoneNumber(PHONE_NUMBER);
+    agency = agencyProvider.registerAgency(agency);
+
+    freelancer.setFreelancerId(freelancerId);
+    //client.setAddress(address);
+    freelancer.setDescription(FREELANCER_DESCRIPTION);
+    freelancer.setPhoneNumber(PHONE_NUMBER);
+    freelancer = freelancerProvider.registerFreelancer(freelancer);
+
+    wagePortageAgreement.setFreelancerId(freelancer.getFreelancerId());
+    wagePortageAgreement.setAgencyId(agency.getAgencyId());
     wagePortageAgreement = wagePortageAgreementProvider.registerWagePortageAgreement(wagePortageAgreement);
 
     client.setClientId(clientId);
     //client.setAddress(address);
-    client.setDescription(FREELANCER_DESCRIPTION);
+    client.setDescription(CLIENT_DESCRIPTION);
     client.setPhoneNumber(PHONE_NUMBER);
 
     //when
@@ -99,13 +128,16 @@ class StartServiceContractIT {
     assertThat(contractId.getContractNumber()).isNotNull();
 
     WagePortageAgreement currentWagePortageAgreement = serviceContract.getWagePortageAgreement();
-    assertThat(currentWagePortageAgreement).isEqualTo(wagePortageAgreement);
+    assertThat(currentWagePortageAgreement.getWagePortageAgreementId().getAgreementNumber())
+        .isEqualTo(wagePortageAgreement.getWagePortageAgreementId().getAgreementNumber());
+
     assertThat(currentWagePortageAgreement.getStartDate()).isBeforeOrEqualTo(serviceContract.getStartDate());
     assertThat(currentWagePortageAgreement.getEndDate()).isEqualTo(serviceContract.getEndDate());
 
     ClientId currentClientId = serviceContract.getClientId();
     assertThat(currentClientId).isNotNull();
-    assertThat(currentClientId).isEqualTo(clientId);
+    assertThat(currentClientId.getSiren()).isEqualTo(clientId.getSiren());
+    assertThat(currentClientId.getName()).isEqualTo(clientId.getName());
 
     assertThat(serviceContract.getServiceContractId()).isNotNull();
     assertThat(serviceContract.getServiceContractId().getContractNumber()).isNotEmpty();

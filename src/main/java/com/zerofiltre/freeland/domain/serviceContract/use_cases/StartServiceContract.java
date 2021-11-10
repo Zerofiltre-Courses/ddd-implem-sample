@@ -45,23 +45,16 @@ public class StartServiceContract {
   }
 
   private Client getRegisteredClient(Client client) {
-    Client registeredClient = clientProvider.clientOfId(client.getClientId());
-    if (registeredClient.getClientId() == null) {
-      registeredClient = clientProvider.registerClient(client);
-    }
-    return registeredClient;
+    return clientProvider.clientOfId(client.getClientId()).orElseGet(() -> clientProvider.registerClient(client));
   }
 
 
   private WagePortageAgreement nonNullWagePortageAgreement(WagePortageAgreementId wagePortageAgreementId)
       throws ServiceContractException {
-    WagePortageAgreement wagePortageAgreement = wagePortageAgreementProvider
-        .wagePortageAgreementOfId(wagePortageAgreementId);
-    if (wagePortageAgreement.getWagePortageAgreementId() == null) {
-      throw new ServiceContractException(
-          "There is no wage portage agreement available for" + wagePortageAgreementId.getAgreementNumber());
-    }
-    return wagePortageAgreement;
+    return wagePortageAgreementProvider.wagePortageAgreementOfId(wagePortageAgreementId)
+        .orElseThrow(() -> new ServiceContractException(
+            "There is no wage portage agreement available for" + wagePortageAgreementId.getAgreementNumber())
+        );
   }
 
   private String generateContractNumber() {

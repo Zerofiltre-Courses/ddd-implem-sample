@@ -5,10 +5,13 @@ import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
 import com.zerofiltre.freeland.domain.serviceContract.use_cases.ServiceContractProvider;
 import com.zerofiltre.freeland.infra.providers.database.serviceContract.mapper.ServiceContractJPAMapper;
 import com.zerofiltre.freeland.infra.providers.database.serviceContract.model.ServiceContractJPA;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ServiceContractDatabaseProvider implements ServiceContractProvider {
 
@@ -17,9 +20,9 @@ public class ServiceContractDatabaseProvider implements ServiceContractProvider 
 
 
   @Override
-  public ServiceContract serviceContractFromId(ServiceContractId serviceContractId) {
-    ServiceContractJPA serviceContractJPA = repository.findByContractNumber(serviceContractId.getContractNumber());
-    return mapper.fromJPA(serviceContractJPA);
+  public Optional<ServiceContract> serviceContractFromId(ServiceContractId serviceContractId) {
+    return repository.findByContractNumber(serviceContractId.getContractNumber())
+        .map(mapper::fromJPA);
   }
 
   @Override

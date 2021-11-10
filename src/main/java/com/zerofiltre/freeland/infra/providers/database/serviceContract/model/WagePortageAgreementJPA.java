@@ -3,8 +3,8 @@ package com.zerofiltre.freeland.infra.providers.database.serviceContract.model;
 import com.zerofiltre.freeland.infra.providers.database.agency.model.AgencyJPA;
 import com.zerofiltre.freeland.infra.providers.database.freelancer.model.FreelancerJPA;
 import java.util.Date;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -25,11 +25,11 @@ public class WagePortageAgreementJPA {
 
   private String agreementNumber;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "freelancer_db_id")
   private FreelancerJPA freelancer;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "agency_db_id")
   private AgencyJPA agency;
 
