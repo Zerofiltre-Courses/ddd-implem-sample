@@ -21,16 +21,14 @@ public class WagePortageAgreementJPA {
 
   @Id
   @GeneratedValue
-  Long id;
-
-  private String agreementNumber;
+  private Long agreementNumber;
 
   @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "freelancer_db_id")
+  @JoinColumn(name = "freelancer_siren")
   private FreelancerJPA freelancer;
 
   @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "agency_db_id")
+  @JoinColumn(name = "agency_siren")
   private AgencyJPA agency;
 
   private float serviceFeesRate;

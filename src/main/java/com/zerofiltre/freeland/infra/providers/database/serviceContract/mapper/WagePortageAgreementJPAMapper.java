@@ -8,12 +8,9 @@ import com.zerofiltre.freeland.infra.providers.database.agency.AgencyJPAReposito
 import com.zerofiltre.freeland.infra.providers.database.agency.model.AgencyJPA;
 import com.zerofiltre.freeland.infra.providers.database.freelancer.FreelancerJPARepository;
 import com.zerofiltre.freeland.infra.providers.database.freelancer.model.FreelancerJPA;
-import com.zerofiltre.freeland.infra.providers.database.serviceContract.WagePortageAgreementJPARepository;
 import com.zerofiltre.freeland.infra.providers.database.serviceContract.model.WagePortageAgreementJPA;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
@@ -23,8 +20,6 @@ public abstract class WagePortageAgreementJPAMapper {
   private AgencyJPARepository agencyJPARepository;
   @Autowired
   private FreelancerJPARepository freelancerJPARepository;
-  @Autowired
-  private WagePortageAgreementJPARepository wagePortageAgreementJPARepository;
 
 
   @Mapping(target = "wagePortageAgreementId", source = "agreementNumber")
@@ -37,24 +32,8 @@ public abstract class WagePortageAgreementJPAMapper {
   @Mapping(target = "agency", source = "agencyId")
   public abstract WagePortageAgreementJPA toJPA(WagePortageAgreement wagePortageAgreement);
 
-  @AfterMapping
-  WagePortageAgreementJPA addId(@MappingTarget WagePortageAgreementJPA result,
-      WagePortageAgreement wagePortageAgreement) {
-    if (wagePortageAgreement != null) {
-      WagePortageAgreementId wagePortageAgreementId = wagePortageAgreement.getWagePortageAgreementId();
-      if (wagePortageAgreementId.getAgreementNumber() != null) {
-        return wagePortageAgreementJPARepository.findByAgreementNumber(wagePortageAgreementId.getAgreementNumber())
-            .map(wagePortageAgreementJPA -> {
-              result.setId(wagePortageAgreementJPA.getId());
-              return result;
-            }).orElse(result);
-      }
-    }
-    return result;
-  }
 
-
-  WagePortageAgreementId toWagePortageAgreementId(String agreementNumber) {
+  WagePortageAgreementId toWagePortageAgreementId(Long agreementNumber) {
     if (agreementNumber == null) {
       return null;
     }
@@ -79,13 +58,13 @@ public abstract class WagePortageAgreementJPAMapper {
     if (agencyId == null) {
       return null;
     }
-    return agencyJPARepository.findBySiren(agencyId.getSiren()).orElse(null);
+    return agencyJPARepository.findById(agencyId.getSiren()).orElse(null);
   }
 
   FreelancerJPA toFreelancerJPA(FreelancerId freelancerId) {
     if (freelancerId == null) {
       return null;
     }
-    return freelancerJPARepository.findBySiren(freelancerId.getSiren()).orElse(null);
+    return freelancerJPARepository.findById(freelancerId.getSiren()).orElse(null);
   }
 }

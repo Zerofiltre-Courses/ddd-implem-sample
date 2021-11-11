@@ -21,7 +21,7 @@ public class FreelancerDatabaseProvider implements FreelancerProvider {
 
   @Override
   public Optional<FreelancerJPA> freelancerOfId(FreelancerId freelancerId) {
-    return repository.findBySiren(freelancerId.getSiren());
+    return repository.findById(freelancerId.getSiren());
   }
 
   @Override

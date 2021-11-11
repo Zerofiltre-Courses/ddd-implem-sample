@@ -7,7 +7,6 @@ import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
-import java.security.SecureRandom;
 import java.util.Date;
 
 public class StartServiceContract {
@@ -33,15 +32,13 @@ public class StartServiceContract {
 
     Client registeredClient = getRegisteredClient(client);
 
+    serviceContract.setServiceContractId(new ServiceContractId(null));
     serviceContract.setClientId(registeredClient.getClientId());
     serviceContract.setRate(rate);
     serviceContract.setTerms(terms);
     serviceContract.setStartDate(new Date());
-    serviceContract.setServiceContractId(new ServiceContractId(generateContractNumber()));
 
-    serviceContractProvider.registerContract(serviceContract);
-    return serviceContract;
-
+    return serviceContractProvider.registerContract(serviceContract);
   }
 
   private Client getRegisteredClient(Client client) {
@@ -56,10 +53,5 @@ public class StartServiceContract {
             "There is no wage portage agreement available for" + wagePortageAgreementId.getAgreementNumber())
         );
   }
-
-  private String generateContractNumber() {
-    return String.valueOf(new SecureRandom().nextInt(Integer.MAX_VALUE));
-  }
-
 
 }

@@ -6,7 +6,6 @@ import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
 import com.zerofiltre.freeland.infra.providers.database.client.ClientJPARepository;
 import com.zerofiltre.freeland.infra.providers.database.client.model.ClientJPA;
-import com.zerofiltre.freeland.infra.providers.database.serviceContract.ServiceContractJPARepository;
 import com.zerofiltre.freeland.infra.providers.database.serviceContract.model.ServiceContractJPA;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -20,8 +19,6 @@ public abstract class ServiceContractJPAMapper {
 
   @Autowired
   private ClientJPARepository clientJPARepository;
-  @Autowired
-  private ServiceContractJPARepository serviceContractJPARepository;
 
   @Mappings({
       @Mapping(target = "serviceContractId", source = "contractNumber"),
@@ -45,22 +42,8 @@ public abstract class ServiceContractJPAMapper {
   })
   public abstract ServiceContractJPA toJPA(ServiceContract serviceContract);
 
-  @AfterMapping
-  ServiceContractJPA addId(@MappingTarget ServiceContractJPA result, ServiceContract serviceContract) {
-    if (serviceContract != null) {
-      ServiceContractId serviceContractId = serviceContract.getServiceContractId();
-      if (serviceContractId.getContractNumber() != null) {
-        return serviceContractJPARepository.findByContractNumber(serviceContractId.getContractNumber())
-            .map(serviceContractJPA -> {
-              result.setId(serviceContractJPA.getId());
-              return result;
-            }).orElse(result);
-      }
-    }
-    return result;
-  }
 
-  ServiceContractId toServiceContractId(String contractNumber) {
+  ServiceContractId toServiceContractId(Long contractNumber) {
     if (contractNumber == null) {
       return null;
     }
@@ -78,7 +61,7 @@ public abstract class ServiceContractJPAMapper {
     if (clientId == null) {
       return null;
     }
-    return clientJPARepository.findBySiren(clientId.getSiren()).orElse(null);
+    return clientJPARepository.findById(clientId.getSiren()).orElse(null);
   }
 
 

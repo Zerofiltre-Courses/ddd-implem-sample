@@ -9,6 +9,7 @@ import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
 import com.zerofiltre.freeland.infra.providers.database.serviceContract.mapper.ServiceContractJPAMapper;
 import com.zerofiltre.freeland.infra.providers.database.serviceContract.model.ServiceContractJPA;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 class ServiceContractDatabaseProviderTest {
 
-  public static final String CONTRACT_NUMBER = "xxxxxx";
+  public static final Long CONTRACT_NUMBER = 12L;
   private ServiceContractDatabaseProvider serviceContractDatabaseProvider;
 
   @Mock
@@ -37,13 +38,13 @@ class ServiceContractDatabaseProviderTest {
     //arrange
     ServiceContractId serviceContractId = new ServiceContractId(CONTRACT_NUMBER);
     ServiceContractJPA serviceContractJPA = new ServiceContractJPA();
-    when(repository.getById(any())).thenReturn(serviceContractJPA);
+    when(repository.findById(any())).thenReturn(Optional.of(serviceContractJPA));
 
     //act
     serviceContractDatabaseProvider.serviceContractFromId(serviceContractId);
 
     //assert
-    verify(repository, times(1)).findByContractNumber(CONTRACT_NUMBER);
+    verify(repository, times(1)).findById(CONTRACT_NUMBER);
     verify(mapper, times(1)).fromJPA(serviceContractJPA);
 
   }

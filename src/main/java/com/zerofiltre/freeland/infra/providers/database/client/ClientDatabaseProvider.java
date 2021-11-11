@@ -20,7 +20,7 @@ public class ClientDatabaseProvider implements ClientProvider {
 
   @Override
   public Optional<Client> clientOfId(ClientId clientId) {
-    return repository.findBySiren(clientId.getSiren())
+    return repository.findById(clientId.getSiren())
         .map(mapper::fromJPA);
   }
 

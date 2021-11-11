@@ -21,7 +21,7 @@ public class AgencyDatabaseProvider implements AgencyProvider {
 
   @Override
   public Optional<Agency> agencyOfId(AgencyId AgencyId) {
-    return repository.findBySiren(AgencyId.getSiren())
+    return repository.findById(AgencyId.getSiren())
         .map(mapper::fromJPA);
   }
 

@@ -2,6 +2,7 @@ package com.zerofiltre.freeland.domain.serviceContract.use_cases;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.zerofiltre.freeland.domain.Address;
 import com.zerofiltre.freeland.domain.Rate;
 import com.zerofiltre.freeland.domain.Rate.Currency;
 import com.zerofiltre.freeland.domain.Rate.Frequency;
@@ -18,7 +19,6 @@ import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
-import java.security.SecureRandom;
 import java.util.Date;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -57,7 +57,9 @@ class StartServiceContractIT {
   ServiceContract serviceContract;
   WagePortageAgreement wagePortageAgreement = new WagePortageAgreement();
   Rate rate = new Rate(700, Currency.EUR, Frequency.DAILY);
-  //Address address = new Address("2", "Paris", "75010", "Rue du Poulet", "France");
+  Address address = new Address("1", "Paris", "75010", "Rue du Poulet", "France");
+  Address address1 = new Address("2", "Lyon", "75011", "Rue du Lamp", "France");
+  Address address2 = new Address("3", "Metz", "75012", "Rue du Cathédrale", "France");
 
 
   @Autowired
@@ -93,16 +95,16 @@ class StartServiceContractIT {
     wagePortageAgreement.setAgencyId(agencyId);
     wagePortageAgreement.setFreelancerId(freelancerId);
     wagePortageAgreement.setTerms(WAGE_PORTAGE_TERMS);
-    wagePortageAgreement.setWagePortageAgreementId(new WagePortageAgreementId(generateContractNumber()));
+    wagePortageAgreement.setWagePortageAgreementId(new WagePortageAgreementId(null));
 
     agency.setAgencyId(agencyId);
-    //client.setAddress(address);
+    agency.setAddress(address);
     agency.setDescription(AGENCY_DESCRIPTION);
     agency.setPhoneNumber(PHONE_NUMBER);
     agency = agencyProvider.registerAgency(agency);
 
     freelancer.setFreelancerId(freelancerId);
-    //client.setAddress(address);
+    freelancer.setAddress(address1);
     freelancer.setDescription(FREELANCER_DESCRIPTION);
     freelancer.setPhoneNumber(PHONE_NUMBER);
     freelancer = freelancerProvider.registerFreelancer(freelancer);
@@ -110,9 +112,10 @@ class StartServiceContractIT {
     wagePortageAgreement.setFreelancerId(freelancer.getFreelancerId());
     wagePortageAgreement.setAgencyId(agency.getAgencyId());
     wagePortageAgreement = wagePortageAgreementProvider.registerWagePortageAgreement(wagePortageAgreement);
+    assertThat(wagePortageAgreement.getWagePortageAgreementId().getAgreementNumber()).isNotNull();
 
     client.setClientId(clientId);
-    //client.setAddress(address);
+    client.setAddress(address2);
     client.setDescription(CLIENT_DESCRIPTION);
     client.setPhoneNumber(PHONE_NUMBER);
 
@@ -140,7 +143,7 @@ class StartServiceContractIT {
     assertThat(currentClientId.getName()).isEqualTo(clientId.getName());
 
     assertThat(serviceContract.getServiceContractId()).isNotNull();
-    assertThat(serviceContract.getServiceContractId().getContractNumber()).isNotEmpty();
+    assertThat(serviceContract.getServiceContractId().getContractNumber()).isNotNull();
 
     assertThat(serviceContract.getTerms()).isNotEmpty();
     assertThat(serviceContract.getRate()).isNotNull();
@@ -150,34 +153,5 @@ class StartServiceContractIT {
 
   }
 
-/*  @Test
-  @DisplayName("When the client does not exist, register it")
-  void startServiceContract_registerTheClientWhenItDoesNotExist() throws ServiceContractException {
-
-    //given
-    wagePortageAgreement.setWagePortageAgreementId(agreementId);
-
-    when(wagePortageAgreementProvider.wagePortageAgreementOfId(agreementId)).thenReturn(wagePortageAgreement);
-
-    Client mockCreatedClient = new Client();
-    mockCreatedClient.setClientId(clientId);
-
-    when(clientProvider.clientOfId(any())).thenReturn(client);
-    when(clientProvider.registerClient(any())).thenReturn(mockCreatedClient);
-
-    //when
-    serviceContract = startServiceContract.execute(agreementId, client, SERVICE_CONTRACT_TERMS, rate);
-
-    ClientId currentClientId = serviceContract.getClientId();
-    assertThat(currentClientId).isNotNull();
-    assertThat(currentClientId).isEqualTo(clientId);
-
-    verify(clientProvider, times(1)).clientOfId(any());
-    verify(clientProvider, times(1)).registerClient(any());
-  }*/
-
-  private String generateContractNumber() {
-    return String.valueOf(new SecureRandom().nextInt(Integer.MAX_VALUE));
-  }
 
 }

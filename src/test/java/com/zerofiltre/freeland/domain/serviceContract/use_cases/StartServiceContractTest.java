@@ -32,7 +32,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 class StartServiceContractTest {
 
-  public static final String AGREEMENT_NUMBER = "agreement_number";
+  public static final Long AGREEMENT_NUMBER = 15L;
   public static final String CLIENT_NAME = "client_name";
   public static final String CLIENT_SIREN = "client_siren";
   public static final String FREELANCER_SIREN = "freelancer_siren";
@@ -91,6 +91,12 @@ class StartServiceContractTest {
     when(wagePortageAgreementProvider.wagePortageAgreementOfId(agreementId))
         .thenReturn(Optional.of(wagePortageAgreement));
     when(clientProvider.clientOfId(clientId)).thenReturn(Optional.of(client));
+    when(serviceContractProvider.registerContract(any()))
+        .thenAnswer(invocationOnMock -> {
+          ServiceContract result = invocationOnMock.getArgument(0);
+          result.setServiceContractId(new ServiceContractId(12L));
+          return result;
+        });
 
     //when
     serviceContract = startServiceContract.execute(agreementId, client, SERVICE_CONTRACT_TERMS, rate);
@@ -112,7 +118,7 @@ class StartServiceContractTest {
     assertThat(currentClientId).isEqualTo(clientId);
 
     assertThat(serviceContract.getServiceContractId()).isNotNull();
-    assertThat(serviceContract.getServiceContractId().getContractNumber()).isNotEmpty();
+    assertThat(serviceContract.getServiceContractId().getContractNumber()).isNotNull();
 
     assertThat(serviceContract.getTerms()).isNotEmpty();
     assertThat(serviceContract.getRate()).isNotNull();
@@ -146,6 +152,13 @@ class StartServiceContractTest {
 
     when(wagePortageAgreementProvider.wagePortageAgreementOfId(agreementId))
         .thenReturn(Optional.of(wagePortageAgreement));
+
+    when(serviceContractProvider.registerContract(any()))
+        .thenAnswer(invocationOnMock -> {
+          ServiceContract result = invocationOnMock.getArgument(0);
+          result.setServiceContractId(new ServiceContractId(12L));
+          return result;
+        });
 
     Client mockCreatedClient = new Client();
     mockCreatedClient.setClientId(clientId);

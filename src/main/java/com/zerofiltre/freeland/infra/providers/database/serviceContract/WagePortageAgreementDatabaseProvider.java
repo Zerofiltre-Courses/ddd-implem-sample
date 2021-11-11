@@ -20,7 +20,7 @@ public class WagePortageAgreementDatabaseProvider implements WagePortageAgreemen
 
   @Override
   public Optional<WagePortageAgreement> wagePortageAgreementOfId(WagePortageAgreementId wagePortageAgreementId) {
-    return repository.findByAgreementNumber(wagePortageAgreementId.getAgreementNumber())
+    return repository.findById(wagePortageAgreementId.getAgreementNumber())
         .map(mapper::fromJPA);
   }
 

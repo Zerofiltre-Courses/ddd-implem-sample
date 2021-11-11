@@ -4,13 +4,13 @@ import java.util.Objects;
 
 public class WagePortageAgreementId {
 
-  private final String agreementNumber;
+  private final Long agreementNumber;
 
-  public WagePortageAgreementId(String agreementNumber) {
+  public WagePortageAgreementId(Long agreementNumber) {
     this.agreementNumber = agreementNumber;
   }
 
-  public String getAgreementNumber() {
+  public Long getAgreementNumber() {
     return agreementNumber;
   }
 
