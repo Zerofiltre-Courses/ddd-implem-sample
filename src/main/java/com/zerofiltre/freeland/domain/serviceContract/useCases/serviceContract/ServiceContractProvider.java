@@ -1,4 +1,4 @@
-package com.zerofiltre.freeland.domain.serviceContract.use_cases;
+package com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract;
 
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;

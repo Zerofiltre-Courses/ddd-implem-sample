@@ -20,8 +20,9 @@ public class FreelancerDatabaseProvider implements FreelancerProvider {
   private final FreelancerJPAMapper mapper;
 
   @Override
-  public Optional<FreelancerJPA> freelancerOfId(FreelancerId freelancerId) {
-    return repository.findById(freelancerId.getSiren());
+  public Optional<Freelancer> freelancerOfId(FreelancerId freelancerId) {
+    return repository.findById(freelancerId.getSiren())
+        .map(mapper::fromJPA);
   }
 
   @Override

@@ -1,4 +1,4 @@
-package com.zerofiltre.freeland.domain.serviceContract.use_cases;
+package com.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement;
 
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;

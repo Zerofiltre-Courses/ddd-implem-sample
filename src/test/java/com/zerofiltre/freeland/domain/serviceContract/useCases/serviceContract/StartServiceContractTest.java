@@ -1,4 +1,4 @@
-package com.zerofiltre.freeland.domain.serviceContract.use_cases;
+package com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -20,6 +20,9 @@ import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
+import com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.ServiceContractProvider;
+import com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.StartServiceContract;
+import com.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement.WagePortageAgreementProvider;
 import java.util.Date;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;

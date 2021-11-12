@@ -1,4 +1,4 @@
-package com.zerofiltre.freeland.domain.serviceContract.use_cases;
+package com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,7 +19,12 @@ import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
+import com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.ServiceContractException;
+import com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.ServiceContractProvider;
+import com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.StartServiceContract;
+import com.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement.WagePortageAgreementProvider;
 import java.util.Date;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,9 +62,9 @@ class StartServiceContractIT {
   ServiceContract serviceContract;
   WagePortageAgreement wagePortageAgreement = new WagePortageAgreement();
   Rate rate = new Rate(700, Currency.EUR, Frequency.DAILY);
-  Address address = new Address("1", "Paris", "75010", "Rue du Poulet", "France");
-  Address address1 = new Address("2", "Lyon", "75011", "Rue du Lamp", "France");
-  Address address2 = new Address("3", "Metz", "75012", "Rue du Cathédrale", "France");
+  Address agencyAdress = new Address("1", "Paris", "75010", "Rue du Poulet", "France");
+  Address freelancerAddress = new Address("2", "Lyon", "75011", "Rue du Lamp", "France");
+  Address clientAddress = new Address("3", "Metz", "75012", "Rue du Cathédrale", "France");
 
 
   @Autowired
@@ -85,10 +90,10 @@ class StartServiceContractIT {
   }
 
   @Test
-  @DisplayName("Start service contract must return a proper service contract")
+  @DisplayName("Start service contract must return a proper service contract containing all needed info")
   void executeStart_mustProduceAProperServiceContract() throws ServiceContractException {
 
-    //arrange
+    //arrange : A wage portage agreement is required for any service contract signature
     Date wagePortageStartDate = new Date();
     wagePortageAgreement.setStartDate(wagePortageStartDate);
     wagePortageAgreement.setServiceFeesRate(0.05f);
@@ -98,13 +103,13 @@ class StartServiceContractIT {
     wagePortageAgreement.setWagePortageAgreementId(new WagePortageAgreementId(null));
 
     agency.setAgencyId(agencyId);
-    agency.setAddress(address);
+    agency.setAddress(agencyAdress);
     agency.setDescription(AGENCY_DESCRIPTION);
     agency.setPhoneNumber(PHONE_NUMBER);
     agency = agencyProvider.registerAgency(agency);
 
     freelancer.setFreelancerId(freelancerId);
-    freelancer.setAddress(address1);
+    freelancer.setAddress(freelancerAddress);
     freelancer.setDescription(FREELANCER_DESCRIPTION);
     freelancer.setPhoneNumber(PHONE_NUMBER);
     freelancer = freelancerProvider.registerFreelancer(freelancer);
@@ -114,8 +119,9 @@ class StartServiceContractIT {
     wagePortageAgreement = wagePortageAgreementProvider.registerWagePortageAgreement(wagePortageAgreement);
     assertThat(wagePortageAgreement.getWagePortageAgreementId().getAgreementNumber()).isNotNull();
 
+    //A client data is required, registered or not
     client.setClientId(clientId);
-    client.setAddress(address2);
+    client.setAddress(clientAddress);
     client.setDescription(CLIENT_DESCRIPTION);
     client.setPhoneNumber(PHONE_NUMBER);
 
@@ -126,10 +132,12 @@ class StartServiceContractIT {
     //then
     assertThat(serviceContract).isNotNull();
 
+    //the service contract is correctly created
     ServiceContractId contractId = serviceContract.getServiceContractId();
     assertThat(contractId).isNotNull();
     assertThat(contractId.getContractNumber()).isNotNull();
 
+    //The Wage portage agreement attached to the service contract is the previously saved one
     WagePortageAgreement currentWagePortageAgreement = serviceContract.getWagePortageAgreement();
     assertThat(currentWagePortageAgreement.getWagePortageAgreementId().getAgreementNumber())
         .isEqualTo(wagePortageAgreement.getWagePortageAgreementId().getAgreementNumber());
@@ -137,11 +145,24 @@ class StartServiceContractIT {
     assertThat(currentWagePortageAgreement.getStartDate()).isBeforeOrEqualTo(serviceContract.getStartDate());
     assertThat(currentWagePortageAgreement.getEndDate()).isEqualTo(serviceContract.getEndDate());
 
+    //the service contract is attached with a registered client
     ClientId currentClientId = serviceContract.getClientId();
     assertThat(currentClientId).isNotNull();
     assertThat(currentClientId.getSiren()).isEqualTo(clientId.getSiren());
     assertThat(currentClientId.getName()).isEqualTo(clientId.getName());
 
+    //the attached registered has been created properly
+    Optional<Client> registeredClient = clientProvider.clientOfId(currentClientId);
+    assertThat(registeredClient).isNotEmpty();
+    registeredClient.ifPresent(theRegisteredClient -> {
+      assertThat(theRegisteredClient.getAddress().getCity()).isEqualTo(clientAddress.getCity());
+      assertThat(theRegisteredClient.getAddress().getStreetName()).isEqualTo(clientAddress.getStreetName());
+      assertThat(theRegisteredClient.getAddress().getStreetNumber()).isEqualTo(clientAddress.getStreetNumber());
+      assertThat(theRegisteredClient.getAddress().getPostalCode()).isEqualTo(clientAddress.getPostalCode());
+      assertThat(theRegisteredClient.getAddress().getCountry()).isEqualTo(clientAddress.getCountry());
+    });
+
+    //the service contract has all  the needed info
     assertThat(serviceContract.getServiceContractId()).isNotNull();
     assertThat(serviceContract.getServiceContractId().getContractNumber()).isNotNull();
 
@@ -151,7 +172,35 @@ class StartServiceContractIT {
     assertThat(serviceContract.getRate().getFrequency()).isNotNull();
     assertThat(serviceContract.getRate().getCurrency()).isNotNull();
 
-  }
+    //the service contract is attached to the agency attached to the Wage portage agreement
+    AgencyId registeredAgencyId = serviceContract.getWagePortageAgreement().getAgencyId();
+    assertThat(registeredAgencyId.getName()).isEqualTo(agencyId.getName());
+    assertThat(registeredAgencyId.getSiren()).isEqualTo(agencyId.getSiren());
 
+    Optional<Agency> registeredAgency = agencyProvider.agencyOfId(registeredAgencyId);
+    assertThat(registeredAgency).isNotEmpty();
+    registeredAgency.ifPresent(theRegisteredAgency -> {
+      assertThat(theRegisteredAgency.getAddress().getCity()).isEqualTo(agencyAdress.getCity());
+      assertThat(theRegisteredAgency.getAddress().getStreetName()).isEqualTo(agencyAdress.getStreetName());
+      assertThat(theRegisteredAgency.getAddress().getStreetNumber()).isEqualTo(agencyAdress.getStreetNumber());
+      assertThat(theRegisteredAgency.getAddress().getPostalCode()).isEqualTo(agencyAdress.getPostalCode());
+      assertThat(theRegisteredAgency.getAddress().getCountry()).isEqualTo(agencyAdress.getCountry());
+    });
+
+    //the service contract is attached to the freelancer attached to the Wage portage agreement
+    FreelancerId registeredFreelancerId = serviceContract.getWagePortageAgreement().getFreelancerId();
+    assertThat(registeredFreelancerId.getName()).isEqualTo(freelancerId.getName());
+    assertThat(registeredFreelancerId.getSiren()).isEqualTo(freelancerId.getSiren());
+
+    Optional<Freelancer> registeredFreelancer = freelancerProvider.freelancerOfId(registeredFreelancerId);
+    assertThat(registeredFreelancer).isNotEmpty();
+    registeredFreelancer.ifPresent(theRegisteredFreelancer -> {
+      assertThat(theRegisteredFreelancer.getAddress().getCity()).isEqualTo(freelancerAddress.getCity());
+      assertThat(theRegisteredFreelancer.getAddress().getStreetName()).isEqualTo(freelancerAddress.getStreetName());
+      assertThat(theRegisteredFreelancer.getAddress().getStreetNumber()).isEqualTo(freelancerAddress.getStreetNumber());
+      assertThat(theRegisteredFreelancer.getAddress().getPostalCode()).isEqualTo(freelancerAddress.getPostalCode());
+      assertThat(theRegisteredFreelancer.getAddress().getCountry()).isEqualTo(freelancerAddress.getCountry());
+    });
+  }
 
 }
