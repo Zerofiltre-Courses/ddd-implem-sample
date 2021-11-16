@@ -30,10 +30,12 @@ class StartWagePortageAgreementTest {
   public static final String FREELANCER_SIREN = "freelancer_siren";
   public static final String FREELANCER_NAME = "freelancer_name";
   public static final String WAGE_PORTAGE_TERMS = "Wage portage terms";
+  public static final float SERVICE_FEES_RATE = 0.05f;
+  public static final long AGREEMENT_NUMBER = 12L;
 
   StartWagePortageAgreement startWagePortageAgreement;
-  Agency agency;
-  Freelancer freelancer;
+  Agency agency = new Agency();
+  Freelancer freelancer = new Freelancer();
   AgencyId agencyId = new AgencyId(AGENCY_SIREN, AGENCY_NAME);
   FreelancerId freelancerId = new FreelancerId(FREELANCER_SIREN, FREELANCER_NAME);
 
@@ -41,11 +43,14 @@ class StartWagePortageAgreementTest {
   FreelancerProvider freelancerProvider;
   @Mock
   AgencyProvider agencyProvider;
+  @Mock
+  WagePortageAgreementProvider wagePortageAgreementProvider;
 
 
   @BeforeEach
   void setUp() {
-    startWagePortageAgreement = new StartWagePortageAgreement();
+    startWagePortageAgreement = new StartWagePortageAgreement(wagePortageAgreementProvider, agencyProvider,
+        freelancerProvider);
     agency.setAgencyId(agencyId);
     freelancer.setFreelancerId(freelancerId);
   }
@@ -53,14 +58,20 @@ class StartWagePortageAgreementTest {
 
   @Test
   @DisplayName("start a Wage portage Agreement must produce a proper agreement")
-  void execute_mustReturnAProperAgreement() {
+  void execute_mustReturnAProperAgreement() throws StartWagePortageAgreementException {
 
     //ARRANGE
     when(freelancerProvider.freelancerOfId(any())).thenReturn(Optional.of(freelancer));
     when(agencyProvider.agencyOfId(any())).thenReturn(Optional.of(agency));
+    when(wagePortageAgreementProvider.registerWagePortageAgreement(any())).thenAnswer(invocationOnMock -> {
+      WagePortageAgreement wagePortageAgreement = invocationOnMock.getArgument(0);
+      wagePortageAgreement.setWagePortageAgreementId(new WagePortageAgreementId(AGREEMENT_NUMBER));
+      return wagePortageAgreement;
+    });
 
     //ACT
-    WagePortageAgreement wagePortageAgreement = startWagePortageAgreement.execute(agency, freelancer);
+    WagePortageAgreement wagePortageAgreement = startWagePortageAgreement
+        .execute(agencyId, freelancerId, WAGE_PORTAGE_TERMS, SERVICE_FEES_RATE);
 
     //ASSERT
     assertThat(wagePortageAgreement).isNotNull();
@@ -71,6 +82,7 @@ class StartWagePortageAgreementTest {
     WagePortageAgreementId wagePortageAgreementId = wagePortageAgreement.getWagePortageAgreementId();
     assertThat(wagePortageAgreementId).isNotNull();
     assertThat(wagePortageAgreementId.getAgreementNumber()).isNotNull();
+    assertThat(wagePortageAgreementId.getAgreementNumber()).isEqualTo(AGREEMENT_NUMBER);
 
     AgencyId registeredAgencyId = wagePortageAgreement.getAgencyId();
     assertThat(registeredAgencyId).isNotNull();
@@ -85,17 +97,44 @@ class StartWagePortageAgreementTest {
   }
 
   @Test
-  @DisplayName("Start a wage portage agreement throws a StartWagePortageAgreementException if the freelancer or the Agency is not registered")
-  void execute_throwsStartWagePortageAgreementException_onMissingFreelancerOrAgency() {
+  @DisplayName("Start a wage portage agreement throws a StartWagePortageAgreementException if the freelancer is not registered")
+  void execute_throwsStartWagePortageAgreementException_onMissingFreelancer() {
+
+    //ARRANGE
+    when(freelancerProvider.freelancerOfId(any())).thenReturn(Optional.empty());
+    when(agencyProvider.agencyOfId(any())).thenReturn(Optional.ofNullable(agency));
+
+    //ACT & ASSERT
+    assertThatExceptionOfType(StartWagePortageAgreementException.class)
+        .isThrownBy(
+            () -> startWagePortageAgreement.execute(agencyId, freelancerId, WAGE_PORTAGE_TERMS, SERVICE_FEES_RATE));
+  }
+
+  @Test
+  @DisplayName("Start a wage portage agreement throws a StartWagePortageAgreementException if the Agency is not registered")
+  void execute_throwsStartWagePortageAgreementException_onMissingAgency() {
+
+    //ARRANGE
+    when(freelancerProvider.freelancerOfId(any())).thenReturn(Optional.ofNullable(freelancer));
+    when(agencyProvider.agencyOfId(any())).thenReturn(Optional.empty());
+
+    //ACT & ASSERT
+    assertThatExceptionOfType(StartWagePortageAgreementException.class)
+        .isThrownBy(
+            () -> startWagePortageAgreement.execute(agencyId, freelancerId, WAGE_PORTAGE_TERMS, SERVICE_FEES_RATE));
+  }
+
+  @Test
+  @DisplayName("Start a wage portage agreement throws a StartWagePortageAgreementException if the Agency and the freelancer are not registered")
+  void execute_throwsStartWagePortageAgreementException_onMissingAgencyAndFreelance() {
 
     //ARRANGE
     when(freelancerProvider.freelancerOfId(any())).thenReturn(Optional.empty());
     when(agencyProvider.agencyOfId(any())).thenReturn(Optional.empty());
 
-    //ACT
-    startWagePortageAgreement.execute(agency, freelancer);
-
+    //ACT & ASSERT
     assertThatExceptionOfType(StartWagePortageAgreementException.class)
-        .isThrownBy(() -> startWagePortageAgreement.execute(agency, freelancer));
+        .isThrownBy(
+            () -> startWagePortageAgreement.execute(agencyId, freelancerId, WAGE_PORTAGE_TERMS, SERVICE_FEES_RATE));
   }
 }

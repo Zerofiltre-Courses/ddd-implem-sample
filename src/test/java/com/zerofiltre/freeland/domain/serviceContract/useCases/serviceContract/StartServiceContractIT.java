@@ -19,9 +19,6 @@ import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
-import com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.ServiceContractException;
-import com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.ServiceContractProvider;
-import com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.StartServiceContract;
 import com.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement.WagePortageAgreementProvider;
 import java.util.Date;
 import java.util.Optional;
@@ -30,13 +27,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SpringBootTest
-@ExtendWith(SpringExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
 class StartServiceContractIT {
 
@@ -62,7 +56,7 @@ class StartServiceContractIT {
   ServiceContract serviceContract;
   WagePortageAgreement wagePortageAgreement = new WagePortageAgreement();
   Rate rate = new Rate(700, Currency.EUR, Frequency.DAILY);
-  Address agencyAdress = new Address("1", "Paris", "75010", "Rue du Poulet", "France");
+  Address agencyAddress = new Address("1", "Paris", "75010", "Rue du Poulet", "France");
   Address freelancerAddress = new Address("2", "Lyon", "75011", "Rue du Lamp", "France");
   Address clientAddress = new Address("3", "Metz", "75012", "Rue du Cathédrale", "France");
 
@@ -103,7 +97,7 @@ class StartServiceContractIT {
     wagePortageAgreement.setWagePortageAgreementId(new WagePortageAgreementId(null));
 
     agency.setAgencyId(agencyId);
-    agency.setAddress(agencyAdress);
+    agency.setAddress(agencyAddress);
     agency.setDescription(AGENCY_DESCRIPTION);
     agency.setPhoneNumber(PHONE_NUMBER);
     agency = agencyProvider.registerAgency(agency);
@@ -180,11 +174,11 @@ class StartServiceContractIT {
     Optional<Agency> registeredAgency = agencyProvider.agencyOfId(registeredAgencyId);
     assertThat(registeredAgency).isNotEmpty();
     registeredAgency.ifPresent(theRegisteredAgency -> {
-      assertThat(theRegisteredAgency.getAddress().getCity()).isEqualTo(agencyAdress.getCity());
-      assertThat(theRegisteredAgency.getAddress().getStreetName()).isEqualTo(agencyAdress.getStreetName());
-      assertThat(theRegisteredAgency.getAddress().getStreetNumber()).isEqualTo(agencyAdress.getStreetNumber());
-      assertThat(theRegisteredAgency.getAddress().getPostalCode()).isEqualTo(agencyAdress.getPostalCode());
-      assertThat(theRegisteredAgency.getAddress().getCountry()).isEqualTo(agencyAdress.getCountry());
+      assertThat(theRegisteredAgency.getAddress().getCity()).isEqualTo(agencyAddress.getCity());
+      assertThat(theRegisteredAgency.getAddress().getStreetName()).isEqualTo(agencyAddress.getStreetName());
+      assertThat(theRegisteredAgency.getAddress().getStreetNumber()).isEqualTo(agencyAddress.getStreetNumber());
+      assertThat(theRegisteredAgency.getAddress().getPostalCode()).isEqualTo(agencyAddress.getPostalCode());
+      assertThat(theRegisteredAgency.getAddress().getCountry()).isEqualTo(agencyAddress.getCountry());
     });
 
     //the service contract is attached to the freelancer attached to the Wage portage agreement

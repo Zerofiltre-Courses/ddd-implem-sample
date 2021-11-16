@@ -27,7 +27,7 @@ public abstract class WagePortageAgreementJPAMapper {
   @Mapping(target = "agencyId", source = "agency")
   public abstract WagePortageAgreement fromJPA(WagePortageAgreementJPA wagePortageAgreementJPA);
 
-  @Mapping(target = "agreementNumber", expression = "java(wagePortageAgreement.getWagePortageAgreementId().getAgreementNumber())")
+  @Mapping(target = "agreementNumber", source = "wagePortageAgreementId")
   @Mapping(target = "freelancer", source = "freelancerId")
   @Mapping(target = "agency", source = "agencyId")
   public abstract WagePortageAgreementJPA toJPA(WagePortageAgreement wagePortageAgreement);
@@ -38,6 +38,13 @@ public abstract class WagePortageAgreementJPAMapper {
       return null;
     }
     return new WagePortageAgreementId(agreementNumber);
+  }
+
+  Long toAgreementNumber(WagePortageAgreementId wagePortageAgreementId) {
+    if (wagePortageAgreementId == null) {
+      return null;
+    }
+    return wagePortageAgreementId.getAgreementNumber();
   }
 
   FreelancerId toFreelancerId(FreelancerJPA freelancerJPA) {
