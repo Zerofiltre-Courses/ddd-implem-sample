@@ -29,4 +29,11 @@ public class WagePortageAgreementDatabaseProvider implements WagePortageAgreemen
     WagePortageAgreementJPA wagePortageAgreementJPA = mapper.toJPA(wagePortageAgreement);
     return mapper.fromJPA(repository.save(wagePortageAgreementJPA));
   }
+
+  @Override
+  public void removeWagePortageAgreement(WagePortageAgreementId wagePortageAgreementId) {
+    repository.deleteById(wagePortageAgreementId.getAgreementNumber());
+  }
+
+
 }

@@ -4,6 +4,7 @@ import com.zerofiltre.freeland.domain.Rate.Currency;
 import com.zerofiltre.freeland.domain.Rate.Frequency;
 import com.zerofiltre.freeland.infra.providers.database.client.model.ClientJPA;
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -26,7 +27,7 @@ public class ServiceContractJPA {
   @GeneratedValue
   private Long contractNumber;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
   @JoinColumn(name = "wage_portage_agreement_number")
   private WagePortageAgreementJPA wagePortageAgreement;
 

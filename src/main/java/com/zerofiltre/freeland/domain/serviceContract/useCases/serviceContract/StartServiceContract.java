@@ -25,7 +25,7 @@ public class StartServiceContract {
   }
 
   public ServiceContract execute(WagePortageAgreementId wagePortageAgreementId, Client client, String terms, Rate rate)
-      throws ServiceContractException {
+      throws StartServiceContractException {
     ServiceContract serviceContract = new ServiceContract();
 
     WagePortageAgreement wagePortageAgreement = nonNullWagePortageAgreement(wagePortageAgreementId);
@@ -48,9 +48,9 @@ public class StartServiceContract {
 
 
   private WagePortageAgreement nonNullWagePortageAgreement(WagePortageAgreementId wagePortageAgreementId)
-      throws ServiceContractException {
+      throws StartServiceContractException {
     return wagePortageAgreementProvider.wagePortageAgreementOfId(wagePortageAgreementId)
-        .orElseThrow(() -> new ServiceContractException(
+        .orElseThrow(() -> new StartServiceContractException(
             "There is no wage portage agreement available for" + wagePortageAgreementId.getAgreementNumber())
         );
   }

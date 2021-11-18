@@ -85,7 +85,7 @@ class StartServiceContractIT {
 
   @Test
   @DisplayName("Start service contract must return a proper service contract containing all needed info")
-  void executeStart_mustProduceAProperServiceContract() throws ServiceContractException {
+  void executeStart_mustProduceAProperServiceContract() throws StartServiceContractException {
 
     //arrange : A wage portage agreement is required for any service contract signature
     Date wagePortageStartDate = new Date();

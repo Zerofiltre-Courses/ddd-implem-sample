@@ -10,4 +10,6 @@ public interface WagePortageAgreementProvider {
 
   WagePortageAgreement registerWagePortageAgreement(WagePortageAgreement wagePortageAgreement);
 
+  void removeWagePortageAgreement(WagePortageAgreementId wagePortageAgreementId);
+
 }

@@ -20,7 +20,7 @@ public class ServiceContractDatabaseProvider implements ServiceContractProvider 
 
 
   @Override
-  public Optional<ServiceContract> serviceContractFromId(ServiceContractId serviceContractId) {
+  public Optional<ServiceContract> serviceContractOfId(ServiceContractId serviceContractId) {
     return repository.findById(serviceContractId.getContractNumber())
         .map(mapper::fromJPA);
   }
@@ -29,5 +29,10 @@ public class ServiceContractDatabaseProvider implements ServiceContractProvider 
   public ServiceContract registerContract(ServiceContract serviceContract) {
     ServiceContractJPA serviceContractJPA = mapper.toJPA(serviceContract);
     return mapper.fromJPA(repository.save(serviceContractJPA));
+  }
+
+  @Override
+  public void removeServiceContract(ServiceContractId serviceContractId) {
+    repository.deleteById(serviceContractId.getContractNumber());
   }
 }

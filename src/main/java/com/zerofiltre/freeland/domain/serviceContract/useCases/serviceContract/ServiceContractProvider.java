@@ -6,9 +6,11 @@ import java.util.Optional;
 
 public interface ServiceContractProvider {
 
-  Optional<ServiceContract> serviceContractFromId(ServiceContractId serviceContractId);
+  Optional<ServiceContract> serviceContractOfId(ServiceContractId serviceContractId);
 
   ServiceContract registerContract(ServiceContract serviceContract);
+
+  void removeServiceContract(ServiceContractId serviceContractId);
 
 
 }

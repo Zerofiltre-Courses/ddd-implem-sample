@@ -20,8 +20,6 @@ import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
-import com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.ServiceContractProvider;
-import com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.StartServiceContract;
 import com.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement.WagePortageAgreementProvider;
 import java.util.Date;
 import java.util.Optional;
@@ -75,7 +73,7 @@ class StartServiceContractTest {
 
   @Test
   @DisplayName("Start service contract must return a proper service contract")
-  void executeStart_mustProduceAProperServiceContract() throws ServiceContractException {
+  void executeStart_mustProduceAProperServiceContract() throws StartServiceContractException {
 
     //given
     wagePortageAgreement.setWagePortageAgreementId(agreementId);
@@ -142,13 +140,13 @@ class StartServiceContractTest {
     when(wagePortageAgreementProvider.wagePortageAgreementOfId(agreementId))
         .thenReturn(Optional.empty());
 
-    assertThatExceptionOfType(ServiceContractException.class)
+    assertThatExceptionOfType(StartServiceContractException.class)
         .isThrownBy(() -> startServiceContract.execute(agreementId, client, SERVICE_CONTRACT_TERMS, rate));
   }
 
   @Test
   @DisplayName("When the client does not exist, register it")
-  void startServiceContract_registerTheClientWhenItDoesNotExist() throws ServiceContractException {
+  void startServiceContract_registerTheClientWhenItDoesNotExist() throws StartServiceContractException {
 
     //given
     wagePortageAgreement.setWagePortageAgreementId(agreementId);

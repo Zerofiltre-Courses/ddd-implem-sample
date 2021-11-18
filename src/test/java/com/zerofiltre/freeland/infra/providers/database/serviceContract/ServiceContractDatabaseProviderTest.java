@@ -41,7 +41,7 @@ class ServiceContractDatabaseProviderTest {
     when(repository.findById(any())).thenReturn(Optional.of(serviceContractJPA));
 
     //act
-    serviceContractDatabaseProvider.serviceContractFromId(serviceContractId);
+    serviceContractDatabaseProvider.serviceContractOfId(serviceContractId);
 
     //assert
     verify(repository, times(1)).findById(CONTRACT_NUMBER);
