@@ -1,6 +1,8 @@
 package com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 
 import com.zerofiltre.freeland.domain.Address;
 import com.zerofiltre.freeland.domain.Rate;
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -75,11 +78,14 @@ class StartServiceContractIT {
   @Autowired
   private ServiceContractProvider serviceContractProvider;
 
+  @Mock
+  private ServiceContractNotifier serviceContractNotifier;
+
 
   @BeforeAll
   void setUp() {
     startServiceContract = new StartServiceContract(clientProvider, wagePortageAgreementProvider,
-        serviceContractProvider);
+        serviceContractProvider, serviceContractNotifier);
 
   }
 
@@ -118,6 +124,8 @@ class StartServiceContractIT {
     client.setAddress(clientAddress);
     client.setDescription(CLIENT_DESCRIPTION);
     client.setPhoneNumber(PHONE_NUMBER);
+
+    doNothing().when(serviceContractNotifier).notify(any());
 
     //when
     serviceContract = startServiceContract

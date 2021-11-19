@@ -1,6 +1,8 @@
 package com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 
 import com.zerofiltre.freeland.domain.Address;
 import com.zerofiltre.freeland.domain.Rate;
@@ -25,6 +27,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -74,10 +77,13 @@ public class StopServiceContractIT {
   @Autowired
   ClientProvider clientProvider;
 
+  @Mock
+  ServiceContractNotifier serviceContractNotifier;
+
   @BeforeAll
   void init() {
     startServiceContract = new StartServiceContract(clientProvider, wagePortageAgreementProvider,
-        serviceContractProvider);
+        serviceContractProvider, serviceContractNotifier);
     stopServiceContract = new StopServiceContract(serviceContractProvider);
   }
 
@@ -87,6 +93,8 @@ public class StopServiceContractIT {
 
     //ARRANGE : Save a wage portage agreement and a service contract
     createAServiceContract();
+    doNothing().when(serviceContractNotifier).notify(any());
+
 
     //ACT
     stopServiceContract.execute(serviceContract);

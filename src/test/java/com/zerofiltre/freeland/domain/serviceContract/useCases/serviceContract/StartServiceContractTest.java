@@ -3,6 +3,7 @@ package com.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,6 +19,7 @@ import com.zerofiltre.freeland.domain.client.model.ClientId;
 import com.zerofiltre.freeland.domain.freelancer.model.FreelancerId;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
 import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
+import com.zerofiltre.freeland.domain.serviceContract.model.ServiceContractStarted;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;
 import com.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
 import com.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement.WagePortageAgreementProvider;
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -44,6 +47,7 @@ class StartServiceContractTest {
   public static final String AGENCY_NAME = "agency_name";
   public static final String PHONE_NUMBER = "0658425369";
   public static final String FREELANCER_DESCRIPTION = "Zerofiltre freelancer";
+  public static final float SERVICE_FEES_RATE = 0.05f;
   StartServiceContract startServiceContract;
   WagePortageAgreementId agreementId = new WagePortageAgreementId(AGREEMENT_NUMBER);
   ClientId clientId = new ClientId(CLIENT_SIREN, CLIENT_NAME);
@@ -63,23 +67,26 @@ class StartServiceContractTest {
   @Mock
   private ServiceContractProvider serviceContractProvider;
 
+  @Mock
+  private ServiceContractNotifier serviceContractNotifier;
+
 
   @BeforeEach
   void setUp() {
     startServiceContract = new StartServiceContract(clientProvider, wagePortageAgreementProvider,
-        serviceContractProvider);
+        serviceContractProvider, serviceContractNotifier);
 
   }
 
   @Test
-  @DisplayName("Start service contract must return a proper service contract")
+  @DisplayName("Start service contract must return a proper service contract and notify serviceContractStarted")
   void executeStart_mustProduceAProperServiceContract() throws StartServiceContractException {
 
     //given
     wagePortageAgreement.setWagePortageAgreementId(agreementId);
     Date wagePortageStartDate = new Date();
     wagePortageAgreement.setStartDate(wagePortageStartDate);
-    wagePortageAgreement.setServiceFeesRate(0.05f);
+    wagePortageAgreement.setServiceFeesRate(SERVICE_FEES_RATE);
     wagePortageAgreement.setAgencyId(agencyId);
     wagePortageAgreement.setFreelancerId(freelancerId);
     wagePortageAgreement.setTerms(WAGE_PORTAGE_TERMS);
@@ -98,6 +105,7 @@ class StartServiceContractTest {
           result.setServiceContractId(new ServiceContractId(12L));
           return result;
         });
+    doNothing().when(serviceContractNotifier).notify(any());
 
     //when
     serviceContract = startServiceContract.execute(agreementId, client, SERVICE_CONTRACT_TERMS, rate);
@@ -130,7 +138,19 @@ class StartServiceContractTest {
     verify(wagePortageAgreementProvider, times(1)).wagePortageAgreementOfId(any());
     verify(serviceContractProvider, times(1)).registerContract(serviceContract);
 
-
+    ArgumentCaptor<ServiceContractStarted> captor = ArgumentCaptor.forClass(ServiceContractStarted.class);
+    verify(serviceContractNotifier, times(1)).notify(captor.capture());
+    ServiceContractStarted serviceContractStarted = captor.getValue();
+    assertThat(serviceContractStarted.getClientId().getName()).isEqualTo(clientId.getName());
+    assertThat(serviceContractStarted.getClientId().getSiren()).isEqualTo(clientId.getSiren());
+    assertThat(serviceContractStarted.getFreelancerId().getSiren()).isEqualTo(freelancerId.getSiren());
+    assertThat(serviceContractStarted.getFreelancerId().getName()).isEqualTo(freelancerId.getName());
+    assertThat(serviceContractStarted.getAgencyId().getName()).isEqualTo(agencyId.getName());
+    assertThat(serviceContractStarted.getAgencyId().getSiren()).isEqualTo(agencyId.getSiren());
+    assertThat(serviceContractStarted.getServiceFeesRate()).isEqualTo(SERVICE_FEES_RATE);
+    assertThat(serviceContractStarted.getRate().getCurrency()).isEqualTo(rate.getCurrency());
+    assertThat(serviceContractStarted.getRate().getPrice()).isEqualTo(rate.getPrice());
+    assertThat(serviceContractStarted.getStartDate()).isEqualTo(serviceContract.getStartDate());
   }
 
   @Test
