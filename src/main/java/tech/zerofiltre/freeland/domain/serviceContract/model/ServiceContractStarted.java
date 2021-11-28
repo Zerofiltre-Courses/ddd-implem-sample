@@ -6,6 +6,9 @@ import tech.zerofiltre.freeland.domain.Rate.Frequency;
 
 public class ServiceContractStarted extends ServiceContractEvent {
 
+  public ServiceContractStarted() {
+  }
+
   public ServiceContractStarted(long serviceContractNumber, String clientName, String clientSiren,
       String freelancerName, String freelancerSiren, String agencyName, String agencySiren, float rateValue,
       Frequency rateFrequency,
