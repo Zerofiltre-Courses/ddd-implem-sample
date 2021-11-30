@@ -30,7 +30,7 @@ class ServiceContractKafkaNotifierLiveIT {
       new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.4.3"));
 
   @Autowired
-  private ServiceContractNotifier producer;
+  private ServiceContractNotificationProvider producer;
 
   @Autowired
   private TestServiceContractKafkaListener listener;

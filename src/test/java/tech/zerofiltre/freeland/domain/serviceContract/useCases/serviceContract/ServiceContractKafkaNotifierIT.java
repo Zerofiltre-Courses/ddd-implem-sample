@@ -24,7 +24,7 @@ class ServiceContractKafkaNotifierIT {
   private TestServiceContractKafkaListener listener;
 
   @Autowired
-  private ServiceContractNotifier producer;
+  private ServiceContractNotificationProvider producer;
 
   @Test
   public void givenEmbeddedKafkaBroker_whenSendingToSimpleProducer_thenMessageReceived()

@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContractEvent;
-import tech.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.ServiceContractNotifier;
+import tech.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.ServiceContractNotificationProvider;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ServiceContractKafkaNotifier implements ServiceContractNotifier {
+public class ServiceContractKafkaNotificationProvider implements ServiceContractNotificationProvider {
 
   private final KafkaTemplate<String, ServiceContractEvent> kafkaTemplate;
 

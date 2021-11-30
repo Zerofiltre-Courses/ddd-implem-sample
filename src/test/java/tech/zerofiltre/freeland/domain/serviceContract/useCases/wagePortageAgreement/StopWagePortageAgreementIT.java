@@ -81,7 +81,6 @@ public class StopWagePortageAgreementIT {
     wagePortageAgreement.setAgencyId(agencyId);
     wagePortageAgreement.setFreelancerId(freelancerId);
     wagePortageAgreement.setTerms(WAGE_PORTAGE_TERMS);
-    wagePortageAgreement.setWagePortageAgreementId(new WagePortageAgreementId(null));
 
     agency.setAgencyId(agencyId);
     agency.setAddress(agencyAddress);
