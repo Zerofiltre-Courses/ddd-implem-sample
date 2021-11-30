@@ -8,6 +8,7 @@ import tech.zerofiltre.freeland.infra.entrypoints.rest.agency.mapper.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.agency.model.*;
 
 @RestController
+@RequestMapping("agency")
 @RequiredArgsConstructor
 public class AgencyController {
 
@@ -15,7 +16,7 @@ public class AgencyController {
     private final AgencyProvider agencyProvider;
 
     @PostMapping
-    AgencyVM registerAgency(@RequestBody AgencyVM agencyVM) {
+    public AgencyVM registerAgency(@RequestBody AgencyVM agencyVM) {
         Agency agency = agencyProvider.registerAgency(agencyVMMapper.fromVM(agencyVM));
         return agencyVMMapper.toVM(agency);
     }

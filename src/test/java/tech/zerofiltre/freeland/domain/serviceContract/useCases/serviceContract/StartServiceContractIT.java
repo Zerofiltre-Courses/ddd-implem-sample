@@ -123,7 +123,6 @@ class StartServiceContractIT {
     wagePortageAgreement.setAgencyId(agencyId);
     wagePortageAgreement.setFreelancerId(freelancerId);
     wagePortageAgreement.setTerms(WAGE_PORTAGE_TERMS);
-    wagePortageAgreement.setWagePortageAgreementId(new WagePortageAgreementId(null));
 
     agency.setAgencyId(agencyId);
     agency.setAddress(agencyAddress);
@@ -147,12 +146,13 @@ class StartServiceContractIT {
     client.setAddress(clientAddress);
     client.setDescription(CLIENT_DESCRIPTION);
     client.setPhoneNumber(PHONE_NUMBER);
+    clientProvider.registerClient(client);
 
     doNothing().when(serviceContractNotificationProvider).notify(any());
 
     //when
     serviceContract = startServiceContract
-        .execute(wagePortageAgreement.getWagePortageAgreementId(), client, SERVICE_CONTRACT_TERMS, rate);
+        .execute(wagePortageAgreement.getWagePortageAgreementId(), client.getClientId(), SERVICE_CONTRACT_TERMS, rate);
 
     //then
     assertThat(serviceContract).isNotNull();

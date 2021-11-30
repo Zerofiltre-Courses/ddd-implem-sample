@@ -4,7 +4,7 @@ public class WagePortageAgreementId {
 
     private final long agreementNumber;
 
-    public WagePortageAgreementId(Long agreementNumber) {
+    public WagePortageAgreementId(long agreementNumber) {
         this.agreementNumber = agreementNumber;
     }
 

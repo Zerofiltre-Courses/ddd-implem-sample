@@ -8,6 +8,7 @@ import tech.zerofiltre.freeland.infra.entrypoints.rest.freelancer.mapper.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.freelancer.model.*;
 
 @RestController
+@RequestMapping("freelancer")
 @RequiredArgsConstructor
 public class FreelancerController {
 
@@ -15,7 +16,7 @@ public class FreelancerController {
     private final FreelancerProvider freelancerProvider;
 
     @PostMapping
-    FreelancerVM registerAgency(@RequestBody FreelancerVM agencyVM) {
+    public FreelancerVM registerAgency(@RequestBody FreelancerVM agencyVM) {
         Freelancer freelancer = freelancerProvider.registerFreelancer(freelancerVMMapper.fromVM(agencyVM));
         return freelancerVMMapper.toVM(freelancer);
     }

@@ -59,6 +59,13 @@ public abstract class ServiceContractVMMapper {
         return new ClientId(clientSiren, null);
     }
 
+    String toClientSiren(ClientId clientId) {
+        if (clientId == null) {
+            return null;
+        }
+        return clientId.getSiren();
+    }
+
     WagePortageAgreement toWagePortageAgreement(long wagePortageAgreementNumber) {
         return wagePortageAgreementJPARepository.findById(wagePortageAgreementNumber)
                 .map(wagePortageAgreementJPA -> wagePortageAgreementJPAMapper.fromJPA(wagePortageAgreementJPA))
