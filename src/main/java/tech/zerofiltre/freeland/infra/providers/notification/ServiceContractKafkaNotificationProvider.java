@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContractEvent;
-import tech.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.ServiceContractNotificationProvider;
+import tech.zerofiltre.freeland.application.useCases.serviceContract.ServiceContractNotificationProvider;
 
 @Slf4j
 @Component

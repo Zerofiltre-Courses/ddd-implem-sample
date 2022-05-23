@@ -1,89 +1,63 @@
 package tech.zerofiltre.freeland.domain.serviceContract.model;
 
-import tech.zerofiltre.freeland.domain.client.model.ClientId;
-import tech.zerofiltre.freeland.domain.Rate;
-import java.util.Date;
+import tech.zerofiltre.freeland.application.useCases.serviceContract.*;
+import tech.zerofiltre.freeland.domain.*;
+import tech.zerofiltre.freeland.domain.client.model.*;
+
+import java.util.*;
 
 public class ServiceContract {
 
-  private ServiceContractId serviceContractId;
-  private WagePortageAgreement wagePortageAgreement;
-  private ClientId clientId;
-  private Rate rate;
-  private String terms;
-  private Date startDate;
-  private Date endDate;
+    private final ServiceContractProvider serviceContractProvider;
+    private ServiceContractId serviceContractId;
+    private WagePortageAgreement wagePortageAgreement;
+    private ClientId clientId;
+    private Rate rate;
+    private String terms;
+    private Date startDate;
+    private Date endDate;
 
-  public ServiceContract() {
-  }
+    public ServiceContract(ServiceContractProvider serviceContractProvider) {
+        this.serviceContractProvider = serviceContractProvider;
+    }
 
-  public ServiceContract(ServiceContractId serviceContractId,
-      WagePortageAgreement wagePortageAgreement,
-      ClientId clientId, Rate rate, String terms, Date startDate, Date endDate) {
-    this.serviceContractId = serviceContractId;
-    this.wagePortageAgreement = wagePortageAgreement;
-    this.clientId = clientId;
-    this.rate = rate;
-    this.terms = terms;
-    this.startDate = startDate;
-    this.endDate = endDate;
-  }
-
-  public ServiceContractId getServiceContractId() {
-    return serviceContractId;
-  }
-
-  public void setServiceContractId(ServiceContractId serviceContractId) {
-    this.serviceContractId = serviceContractId;
-  }
-
-  public ClientId getClientId() {
-    return clientId;
-  }
-
-  public void setClientId(ClientId clientId) {
-    this.clientId = clientId;
-  }
+    public ServiceContract init(WagePortageAgreement wagePortageAgreement, ClientId clientId, String terms, Rate rate, Date startDate, Date endDate) {
+        this.wagePortageAgreement = wagePortageAgreement;
+        this.terms = terms;
+        this.rate = rate;
+        this.clientId = clientId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.serviceContractId = serviceContractProvider.registerContract(this).getServiceContractId();
+        return this;
+    }
 
 
-  public Rate getRate() {
-    return rate;
-  }
+    public ServiceContractId getServiceContractId() {
+        return serviceContractId;
+    }
 
-  public void setRate(Rate rate) {
-    this.rate = rate;
-  }
+    public ClientId getClientId() {
+        return clientId;
+    }
 
-  public String getTerms() {
-    return terms;
-  }
+    public Rate getRate() {
+        return rate;
+    }
 
-  public void setTerms(String terms) {
-    this.terms = terms;
-  }
+    public String getTerms() {
+        return terms;
+    }
 
-  public Date getStartDate() {
-    return startDate;
-  }
+    public Date getStartDate() {
+        return startDate;
+    }
 
-  public void setStartDate(Date startDate) {
-    this.startDate = startDate;
-  }
+    public Date getEndDate() {
+        return endDate;
+    }
 
-  public Date getEndDate() {
-    return endDate;
-  }
-
-  public void setEndDate(Date endDate) {
-    this.endDate = endDate;
-  }
-
-  public WagePortageAgreement getWagePortageAgreement() {
-    return wagePortageAgreement;
-  }
-
-  public void setWagePortageAgreement(
-      WagePortageAgreement wagePortageAgreement) {
-    this.wagePortageAgreement = wagePortageAgreement;
-  }
+    public WagePortageAgreement getWagePortageAgreement() {
+        return wagePortageAgreement;
+    }
 }

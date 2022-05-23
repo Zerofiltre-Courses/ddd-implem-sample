@@ -14,10 +14,8 @@ public class Freelancer {
   private Address address;
 
   private WagePortageAgreementId wagePortageAgreementId;
-  private List<Skill> skills = new ArrayList<>();
+  private List<Skill> skills;
 
-  public Freelancer() {
-  }
 
   public Freelancer(FreelancerId freelancerId, String description, String phoneNumber,
       Address address, WagePortageAgreementId wagePortageAgreementId,
@@ -34,7 +32,7 @@ public class Freelancer {
     return freelancerId;
   }
 
-  public void setFreelancerId(FreelancerId freelancerId) {
+  private void setFreelancerId(FreelancerId freelancerId) {
     this.freelancerId = freelancerId;
   }
 
@@ -42,7 +40,7 @@ public class Freelancer {
     return description;
   }
 
-  public void setDescription(String description) {
+  private void setDescription(String description) {
     this.description = description;
   }
 
@@ -50,7 +48,7 @@ public class Freelancer {
     return phoneNumber;
   }
 
-  public void setPhoneNumber(String phoneNumber) {
+  private void setPhoneNumber(String phoneNumber) {
     this.phoneNumber = phoneNumber;
   }
 
@@ -58,7 +56,7 @@ public class Freelancer {
     return address;
   }
 
-  public void setAddress(Address address) {
+  private void setAddress(Address address) {
     this.address = address;
   }
 
@@ -66,7 +64,7 @@ public class Freelancer {
     return wagePortageAgreementId;
   }
 
-  public void setAgreementId(WagePortageAgreementId wagePortageAgreementId) {
+  private void setAgreementId(WagePortageAgreementId wagePortageAgreementId) {
     this.wagePortageAgreementId = wagePortageAgreementId;
   }
 
@@ -74,7 +72,7 @@ public class Freelancer {
     return skills;
   }
 
-  public void setSkills(List<Skill> skills) {
+  private void setSkills(List<Skill> skills) {
     this.skills = skills;
   }
 

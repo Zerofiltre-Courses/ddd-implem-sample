@@ -1,4 +1,4 @@
-package tech.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement;
+package tech.zerofiltre.freeland.application.useCases.wagePortageAgreement;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;

@@ -2,7 +2,7 @@ package tech.zerofiltre.freeland.infra.providers.database.serviceContract;
 
 import tech.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;
 import tech.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
-import tech.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement.WagePortageAgreementProvider;
+import tech.zerofiltre.freeland.application.useCases.wagePortageAgreement.WagePortageAgreementProvider;
 import tech.zerofiltre.freeland.infra.providers.database.serviceContract.mapper.WagePortageAgreementJPAMapper;
 import tech.zerofiltre.freeland.infra.providers.database.serviceContract.model.WagePortageAgreementJPA;
 import java.util.Optional;

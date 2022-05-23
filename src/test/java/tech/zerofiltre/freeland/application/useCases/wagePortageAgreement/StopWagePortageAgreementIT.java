@@ -1,4 +1,4 @@
-package tech.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement;
+package tech.zerofiltre.freeland.application.useCases.wagePortageAgreement;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,7 +12,7 @@ import tech.zerofiltre.freeland.domain.freelancer.FreelancerProvider;
 import tech.zerofiltre.freeland.domain.freelancer.model.Freelancer;
 import tech.zerofiltre.freeland.domain.freelancer.model.FreelancerId;
 import tech.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;
-import tech.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
+
 import java.util.Date;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import tech.zerofiltre.freeland.infra.providers.database.agency.AgencyDatabaseProvider;
 import tech.zerofiltre.freeland.infra.providers.database.agency.mapper.AgencyJPAMapperImpl;
 import tech.zerofiltre.freeland.infra.providers.database.freelancer.FreelancerDatabaseProvider;

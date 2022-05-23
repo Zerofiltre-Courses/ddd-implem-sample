@@ -1,4 +1,4 @@
-package tech.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract;
+package tech.zerofiltre.freeland.application.useCases.serviceContract;
 
 public class StartServiceContractException extends Exception{
 

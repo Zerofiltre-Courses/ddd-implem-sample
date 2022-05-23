@@ -14,7 +14,7 @@ import tech.zerofiltre.freeland.domain.agency.model.*;
 import tech.zerofiltre.freeland.domain.freelancer.*;
 import tech.zerofiltre.freeland.domain.freelancer.model.*;
 import tech.zerofiltre.freeland.domain.serviceContract.model.*;
-import tech.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement.*;
+import tech.zerofiltre.freeland.application.useCases.wagePortageAgreement.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract.mapper.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract.model.*;
 

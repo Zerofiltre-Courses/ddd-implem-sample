@@ -1,4 +1,4 @@
-package tech.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract;
+package tech.zerofiltre.freeland.application.useCases.serviceContract;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -16,7 +16,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContractEvent;
-import tech.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.ServiceContractKafkaNotifierLiveIT.BrokerPropertiesOverrideInitializer;
+import tech.zerofiltre.freeland.application.useCases.serviceContract.ServiceContractKafkaNotifierLiveIT.BrokerPropertiesOverrideInitializer;
 import tech.zerofiltre.freeland.infra.providers.notification.TestServiceContractKafkaListener;
 
 @SpringBootTest

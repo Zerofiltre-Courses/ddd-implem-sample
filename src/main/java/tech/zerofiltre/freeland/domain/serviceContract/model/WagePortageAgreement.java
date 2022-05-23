@@ -16,8 +16,6 @@ public class WagePortageAgreement {
   private Date startDate;
   private Date endDate;
 
-  public WagePortageAgreement() {
-  }
 
   public WagePortageAgreement(WagePortageAgreementId wagePortageAgreementId,
       FreelancerId freelancerId, AgencyId agencyId, float serviceFeesRate, String terms, Date startDate, Date endDate) {
@@ -42,7 +40,7 @@ public class WagePortageAgreement {
     return freelancerId;
   }
 
-  public void setFreelancerId(FreelancerId freelancerId) {
+  private void setFreelancerId(FreelancerId freelancerId) {
     this.freelancerId = freelancerId;
   }
 
@@ -50,7 +48,7 @@ public class WagePortageAgreement {
     return agencyId;
   }
 
-  public void setAgencyId(AgencyId agencyId) {
+  private void setAgencyId(AgencyId agencyId) {
     this.agencyId = agencyId;
   }
 
@@ -58,7 +56,7 @@ public class WagePortageAgreement {
     return serviceFeesRate;
   }
 
-  public void setServiceFeesRate(float serviceFeesRate) {
+  private void setServiceFeesRate(float serviceFeesRate) {
     this.serviceFeesRate = serviceFeesRate;
   }
 
@@ -66,7 +64,7 @@ public class WagePortageAgreement {
     return terms;
   }
 
-  public void setTerms(String terms) {
+  private void setTerms(String terms) {
     this.terms = terms;
   }
 
@@ -74,7 +72,7 @@ public class WagePortageAgreement {
     return startDate;
   }
 
-  public void setStartDate(Date startDate) {
+  private void setStartDate(Date startDate) {
     this.startDate = startDate;
   }
 
@@ -82,7 +80,7 @@ public class WagePortageAgreement {
     return endDate;
   }
 
-  public void setEndDate(Date endDate) {
+  private void setEndDate(Date endDate) {
     this.endDate = endDate;
   }
 
@@ -90,12 +88,12 @@ public class WagePortageAgreement {
     return this;
   }
 
-  public void start() {
+  private void start() {
     this.startDate = new Date();
   }
 
 
-  public void end() {
+  private void end() {
     this.endDate = new Date();
   }
 

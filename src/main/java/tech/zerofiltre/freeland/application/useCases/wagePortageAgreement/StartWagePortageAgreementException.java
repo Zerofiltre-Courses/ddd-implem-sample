@@ -1,4 +1,4 @@
-package tech.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement;
+package tech.zerofiltre.freeland.application.useCases.wagePortageAgreement;
 
 public class StartWagePortageAgreementException extends Exception{
 

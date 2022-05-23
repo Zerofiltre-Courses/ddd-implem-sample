@@ -1,4 +1,4 @@
-package tech.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract;
+package tech.zerofiltre.freeland.application.useCases.serviceContract;
 
 import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContractEvent;
 

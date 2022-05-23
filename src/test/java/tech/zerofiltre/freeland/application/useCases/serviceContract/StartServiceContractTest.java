@@ -1,4 +1,4 @@
-package tech.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract;
+package tech.zerofiltre.freeland.application.useCases.serviceContract;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
@@ -12,7 +12,7 @@ import tech.zerofiltre.freeland.domain.client.*;
 import tech.zerofiltre.freeland.domain.client.model.*;
 import tech.zerofiltre.freeland.domain.freelancer.model.*;
 import tech.zerofiltre.freeland.domain.serviceContract.model.*;
-import tech.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement.*;
+import tech.zerofiltre.freeland.application.useCases.wagePortageAgreement.*;
 
 import java.util.*;
 

@@ -18,14 +18,11 @@ public class Client {
     this.address = address;
   }
 
-  public Client() {
-  }
-
   public ClientId getClientId() {
     return clientId;
   }
 
-  public void setClientId(ClientId clientId) {
+  private void setClientId(ClientId clientId) {
     this.clientId = clientId;
   }
 
@@ -33,7 +30,7 @@ public class Client {
     return description;
   }
 
-  public void setDescription(String description) {
+  private void setDescription(String description) {
     this.description = description;
   }
 
@@ -41,7 +38,7 @@ public class Client {
     return phoneNumber;
   }
 
-  public void setPhoneNumber(String phoneNumber) {
+  private void setPhoneNumber(String phoneNumber) {
     this.phoneNumber = phoneNumber;
   }
 
@@ -49,7 +46,7 @@ public class Client {
     return address;
   }
 
-  public void setAddress(Address address) {
+  private void setAddress(Address address) {
     this.address = address;
   }
 

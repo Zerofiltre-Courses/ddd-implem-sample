@@ -3,8 +3,8 @@ package tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract;
 import org.springframework.web.bind.annotation.*;
 import tech.zerofiltre.freeland.domain.client.*;
 import tech.zerofiltre.freeland.domain.serviceContract.model.*;
-import tech.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.*;
-import tech.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement.*;
+import tech.zerofiltre.freeland.application.useCases.serviceContract.*;
+import tech.zerofiltre.freeland.application.useCases.wagePortageAgreement.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract.mapper.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract.model.*;
 

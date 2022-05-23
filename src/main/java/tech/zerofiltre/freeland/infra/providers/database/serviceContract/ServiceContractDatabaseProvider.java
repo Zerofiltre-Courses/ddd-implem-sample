@@ -2,7 +2,7 @@ package tech.zerofiltre.freeland.infra.providers.database.serviceContract;
 
 import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
 import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
-import tech.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract.ServiceContractProvider;
+import tech.zerofiltre.freeland.application.useCases.serviceContract.ServiceContractProvider;
 import tech.zerofiltre.freeland.infra.providers.database.serviceContract.mapper.ServiceContractJPAMapper;
 import tech.zerofiltre.freeland.infra.providers.database.serviceContract.model.ServiceContractJPA;
 import java.util.Optional;

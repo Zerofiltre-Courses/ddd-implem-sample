@@ -1,4 +1,4 @@
-package tech.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract;
+package tech.zerofiltre.freeland.application.useCases.serviceContract;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
@@ -11,7 +11,7 @@ import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
 import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
 import tech.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;
 import tech.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
-import tech.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement.WagePortageAgreementProvider;
+import tech.zerofiltre.freeland.application.useCases.wagePortageAgreement.WagePortageAgreementProvider;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

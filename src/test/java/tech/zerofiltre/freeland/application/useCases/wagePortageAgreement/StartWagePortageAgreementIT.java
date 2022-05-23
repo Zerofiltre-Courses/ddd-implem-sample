@@ -1,4 +1,4 @@
-package tech.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement;
+package tech.zerofiltre.freeland.application.useCases.wagePortageAgreement;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,13 +20,10 @@ import tech.zerofiltre.freeland.domain.freelancer.model.Freelancer;
 import tech.zerofiltre.freeland.domain.freelancer.model.FreelancerId;
 import tech.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;
 import tech.zerofiltre.freeland.infra.providers.database.agency.AgencyDatabaseProvider;
-import tech.zerofiltre.freeland.infra.providers.database.agency.mapper.AgencyJPAMapper;
 import tech.zerofiltre.freeland.infra.providers.database.agency.mapper.AgencyJPAMapperImpl;
 import tech.zerofiltre.freeland.infra.providers.database.freelancer.FreelancerDatabaseProvider;
-import tech.zerofiltre.freeland.infra.providers.database.freelancer.mapper.FreelancerJPAMapper;
 import tech.zerofiltre.freeland.infra.providers.database.freelancer.mapper.FreelancerJPAMapperImpl;
 import tech.zerofiltre.freeland.infra.providers.database.serviceContract.WagePortageAgreementDatabaseProvider;
-import tech.zerofiltre.freeland.infra.providers.database.serviceContract.mapper.WagePortageAgreementJPAMapper;
 import tech.zerofiltre.freeland.infra.providers.database.serviceContract.mapper.WagePortageAgreementJPAMapperImpl;
 
 @DataJpaTest

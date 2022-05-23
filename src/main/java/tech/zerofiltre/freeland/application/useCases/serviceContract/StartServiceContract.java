@@ -1,10 +1,10 @@
-package tech.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract;
+package tech.zerofiltre.freeland.application.useCases.serviceContract;
 
 import tech.zerofiltre.freeland.domain.*;
 import tech.zerofiltre.freeland.domain.client.*;
 import tech.zerofiltre.freeland.domain.client.model.*;
 import tech.zerofiltre.freeland.domain.serviceContract.model.*;
-import tech.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement.*;
+import tech.zerofiltre.freeland.application.useCases.wagePortageAgreement.*;
 
 import java.util.*;
 
@@ -30,6 +30,7 @@ public class StartServiceContract {
         ServiceContract serviceContract = new ServiceContract();
 
         WagePortageAgreement wagePortageAgreement = nonNullWagePortageAgreement(wagePortageAgreementId);
+
         serviceContract.setWagePortageAgreement(wagePortageAgreement);
 
         checkClient(clientId);

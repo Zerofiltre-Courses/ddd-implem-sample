@@ -1,4 +1,4 @@
-package tech.zerofiltre.freeland.domain.serviceContract.useCases.serviceContract;
+package tech.zerofiltre.freeland.application.useCases.serviceContract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,8 +32,7 @@ import tech.zerofiltre.freeland.domain.freelancer.model.FreelancerId;
 import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
 import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
 import tech.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreement;
-import tech.zerofiltre.freeland.domain.serviceContract.model.WagePortageAgreementId;
-import tech.zerofiltre.freeland.domain.serviceContract.useCases.wagePortageAgreement.WagePortageAgreementProvider;
+import tech.zerofiltre.freeland.application.useCases.wagePortageAgreement.WagePortageAgreementProvider;
 import tech.zerofiltre.freeland.infra.providers.database.agency.AgencyDatabaseProvider;
 import tech.zerofiltre.freeland.infra.providers.database.agency.mapper.AgencyJPAMapperImpl;
 import tech.zerofiltre.freeland.infra.providers.database.client.ClientDatabaseProvider;
