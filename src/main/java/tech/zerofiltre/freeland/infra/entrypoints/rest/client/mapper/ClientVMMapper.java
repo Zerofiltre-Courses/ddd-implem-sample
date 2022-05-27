@@ -24,13 +24,13 @@ public abstract class ClientVMMapper {
     public abstract Client fromVM(ClientVM clientVM);
 
     @AfterMapping
-    Client completeMapping(@MappingTarget Client result, ClientVM clientVM) {
+    Client completeMapping(@MappingTarget Client.ClientBuilder result, ClientVM clientVM) {
         ClientId clientId = new ClientId(clientVM.getSiren(), clientVM.getName());
-        result.setClientId(clientId);
+        result.clientId(clientId);
         Address address = new Address(clientVM.getStreetNumber(), clientVM.getStreetName(), clientVM.getPostalCode(),
                 clientVM.getCity(), clientVM.getCountry());
-        result.setAddress(address);
-        return result;
+        result.address(address);
+        return result.build();
     }
 
 

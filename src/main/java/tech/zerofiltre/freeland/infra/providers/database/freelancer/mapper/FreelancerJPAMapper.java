@@ -24,13 +24,13 @@ public abstract class FreelancerJPAMapper {
   public abstract Freelancer fromJPA(FreelancerJPA FreelancerJPA);
 
   @AfterMapping
-  Freelancer completeMapping(@MappingTarget Freelancer result, FreelancerJPA freelancerJPA) {
+  Freelancer completeMapping(@MappingTarget Freelancer.FreelancerBuilder result, FreelancerJPA freelancerJPA) {
     FreelancerId FreelancerId = new FreelancerId(freelancerJPA.getSiren(), freelancerJPA.getName());
-    result.setFreelancerId(FreelancerId);
+    result.freelancerId(FreelancerId);
     Address address = new Address(freelancerJPA.getStreetNumber(), freelancerJPA.getStreetName(), freelancerJPA.getPostalCode(),
         freelancerJPA.getCity(), freelancerJPA.getCountry());
-    result.setAddress(address);
-    return result;
+    result.address(address);
+    return result.build();
   }
 
 }

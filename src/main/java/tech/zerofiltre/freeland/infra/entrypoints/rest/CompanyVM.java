@@ -2,11 +2,14 @@ package tech.zerofiltre.freeland.infra.entrypoints.rest;
 
 import lombok.*;
 
+import javax.validation.constraints.*;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class CompanyVM {
 
+    @NotEmpty
     private String siren;
     private String name;
 

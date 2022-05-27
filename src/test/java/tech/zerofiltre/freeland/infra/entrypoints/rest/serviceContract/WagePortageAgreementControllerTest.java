@@ -13,8 +13,8 @@ import tech.zerofiltre.freeland.domain.agency.*;
 import tech.zerofiltre.freeland.domain.agency.model.*;
 import tech.zerofiltre.freeland.domain.freelancer.*;
 import tech.zerofiltre.freeland.domain.freelancer.model.*;
-import tech.zerofiltre.freeland.domain.serviceContract.model.*;
-import tech.zerofiltre.freeland.application.useCases.wagePortageAgreement.*;
+import tech.zerofiltre.freeland.domain.servicecontract.*;
+import tech.zerofiltre.freeland.domain.servicecontract.model.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract.mapper.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract.model.*;
 
@@ -31,12 +31,12 @@ class WagePortageAgreementControllerTest {
     public static final String FREELANCER_SIREN = "freelancer siren";
     public static final String AGREEMENT_TERMS = "agreement terms";
     public static final float SERVICE_FEES_RATE = 0.05f;
+    WagePortageAgreementVM agreementVM = new WagePortageAgreementVM();
+    WagePortageAgreement wagePortageAgreement;
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private WagePortageAgreementVMMapper mapper;
-
     @MockBean
     private WagePortageAgreementProvider wagePortageAgreementProvider;
     @MockBean
@@ -44,8 +44,9 @@ class WagePortageAgreementControllerTest {
     @MockBean
     private FreelancerProvider freelancerProvider;
 
-    WagePortageAgreementVM agreementVM = new WagePortageAgreementVM();
-    WagePortageAgreement wagePortageAgreement = new WagePortageAgreement();
+    public static String asJsonString(final Object obj) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(obj);
+    }
 
     @BeforeEach
     void init() {
@@ -55,20 +56,21 @@ class WagePortageAgreementControllerTest {
         agreementVM.setTerms(AGREEMENT_TERMS);
         agreementVM.setServiceFeesRate(SERVICE_FEES_RATE);
 
-        wagePortageAgreement.setWagePortageAgreementId(new WagePortageAgreementId(12L));
-        wagePortageAgreement.setAgencyId(new AgencyId(AGENCY_SIREN, ""));
-        wagePortageAgreement.setFreelancerId(new FreelancerId(FREELANCER_SIREN, ""));
-        wagePortageAgreement.setTerms(AGREEMENT_TERMS);
-        wagePortageAgreement.setServiceFeesRate(SERVICE_FEES_RATE);
-
+        wagePortageAgreement = WagePortageAgreement.builder().wagePortageAgreementProvider(wagePortageAgreementProvider)
+                .wagePortageAgreementId(new WagePortageAgreementId(12L))
+                .agencyId(new AgencyId(AGENCY_SIREN, ""))
+                .freelancerId(new FreelancerId(FREELANCER_SIREN, ""))
+                .terms(AGREEMENT_TERMS)
+                .serviceFeesRate(SERVICE_FEES_RATE)
+                .build();
     }
 
     @Test
     void whenValidInput_thenReturn200() throws Exception {
 
         //ARRANGE
-        when(agencyProvider.agencyOfId(any())).thenReturn(Optional.of(new Agency()));
-        when(freelancerProvider.freelancerOfId(any())).thenReturn(Optional.of(new Freelancer()));
+        when(agencyProvider.agencyOfId(any())).thenReturn(Optional.of(Agency.builder().agencyProvider(agencyProvider).build()));
+        when(freelancerProvider.freelancerOfId(any())).thenReturn(Optional.of(Freelancer.builder().freelancerProvider(freelancerProvider).build()));
         when(wagePortageAgreementProvider.registerWagePortageAgreement(any())).thenReturn(wagePortageAgreement);
 
         when(mapper.toVM(any())).thenReturn(agreementVM);
@@ -84,9 +86,5 @@ class WagePortageAgreementControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.agreementNumber").value("12"));
-    }
-
-    public static String asJsonString(final Object obj) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(obj);
     }
 }

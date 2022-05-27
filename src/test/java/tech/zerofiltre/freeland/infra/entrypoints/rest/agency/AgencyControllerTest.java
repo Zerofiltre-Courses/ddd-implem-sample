@@ -50,7 +50,7 @@ class AgencyControllerTest {
     void whenValidInput_thenReturn200() throws Exception {
 
         //ARRANGE
-        when(agencyProvider.registerAgency(any())).thenReturn(new Agency());
+        when(agencyProvider.registerAgency(any())).thenReturn(Agency.builder().agencyProvider(agencyProvider).build());
         when(agencyVMMapper.toVM(any())).thenReturn(agencyVM);
 
         //ACT

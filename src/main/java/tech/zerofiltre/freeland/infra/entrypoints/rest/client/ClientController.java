@@ -1,11 +1,14 @@
 package tech.zerofiltre.freeland.infra.entrypoints.rest.client;
 
 import lombok.*;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import tech.zerofiltre.freeland.domain.client.*;
 import tech.zerofiltre.freeland.domain.client.model.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.client.mapper.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.client.model.*;
+
+import javax.validation.*;
 
 @RestController
 @RequestMapping("client")
@@ -16,7 +19,8 @@ public class ClientController {
     private final ClientProvider clientProvider;
 
     @PostMapping
-    public ClientVM registerClient(@RequestBody ClientVM clientVM) {
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ClientVM registerClient(@RequestBody @Valid ClientVM clientVM) {
         Client client = clientProvider.registerClient(clientVMMapper.fromVM(clientVM));
         return clientVMMapper.toVM(client);
     }

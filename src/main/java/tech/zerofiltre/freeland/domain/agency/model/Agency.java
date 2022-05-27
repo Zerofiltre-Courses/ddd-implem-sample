@@ -1,67 +1,99 @@
 package tech.zerofiltre.freeland.domain.agency.model;
 
-import tech.zerofiltre.freeland.domain.Address;
+import tech.zerofiltre.freeland.domain.*;
+import tech.zerofiltre.freeland.domain.agency.*;
+
+import java.util.*;
 
 
 public class Agency {
 
-  private AgencyId agencyId;
-  private String description;
-  private String phoneNumber;
-  private Address address;
+    private AgencyId agencyId;
+    private String description;
+    private String phoneNumber;
+    private Address address;
 
-  public Agency() {
-  }
+    private AgencyProvider agencyProvider;
 
-  public Agency(AgencyId agencyId, String description, String phoneNumber, Address address) {
-    this.agencyId = agencyId;
-    this.description = description;
-    this.phoneNumber = phoneNumber;
-    this.address = address;
-  }
 
-  public AgencyId getAgencyId() {
-    return agencyId;
-  }
+    private Agency(AgencyBuilder agencyBuilder) {
+        this.agencyId = agencyBuilder.agencyId;
+        this.description = agencyBuilder.description;
+        this.phoneNumber = agencyBuilder.phoneNumber;
+        this.address = agencyBuilder.address;
+        this.agencyProvider = agencyBuilder.agencyProvider;
+    }
 
-  public void setAgencyId(AgencyId agencyId) {
-    this.agencyId = agencyId;
-  }
+    public static AgencyBuilder builder() {
+        return new Agency.AgencyBuilder();
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public Agency register() {
+        this.agencyId = agencyProvider.registerAgency(this).getAgencyId();
+        return this;
+    }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    public Optional<Agency> of(AgencyId agencyId) {
+        Optional<Agency> result = agencyProvider.agencyOfId(agencyId);
+        result.ifPresent(agency -> agency.agencyProvider = this.agencyProvider);
+        return result;
+    }
 
-  public String getPhoneNumber() {
-    return phoneNumber;
-  }
+    public AgencyId getAgencyId() {
+        return agencyId;
+    }
 
-  public void setPhoneNumber(String phoneNumber) {
-    this.phoneNumber = phoneNumber;
-  }
+    public String getDescription() {
+        return description;
+    }
 
-  public Address getAddress() {
-    return address;
-  }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-  public void setAddress(Address address) {
-    this.address = address;
-  }
+    public Address getAddress() {
+        return address;
+    }
 
-  public Agency register() {
-    return this;
-  }
+    public AgencyProvider getAgencyProvider() {
+        return agencyProvider;
+    }
 
-  public Agency update() {
-    return this;
-  }
+    public static class AgencyBuilder {
+        private AgencyId agencyId;
+        private String description;
+        private String phoneNumber;
+        private Address address;
 
-  public void close() {
+        private AgencyProvider agencyProvider;
 
-  }
+        public AgencyBuilder agencyId(AgencyId agencyId) {
+            this.agencyId = agencyId;
+            return this;
+        }
 
+        public AgencyBuilder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public AgencyBuilder phoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+            return this;
+        }
+
+        public AgencyBuilder address(Address address) {
+            this.address = address;
+            return this;
+        }
+
+        public AgencyBuilder agencyProvider(AgencyProvider agencyProvider) {
+            this.agencyProvider = agencyProvider;
+            return this;
+        }
+
+        public Agency build() {
+            return new Agency(this);
+        }
+    }
 }

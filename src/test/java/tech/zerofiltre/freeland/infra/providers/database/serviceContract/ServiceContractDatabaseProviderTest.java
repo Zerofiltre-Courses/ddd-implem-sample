@@ -5,8 +5,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
-import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
+import tech.zerofiltre.freeland.domain.servicecontract.model.ServiceContract;
+import tech.zerofiltre.freeland.domain.servicecontract.model.ServiceContractId;
 import tech.zerofiltre.freeland.infra.providers.database.serviceContract.mapper.ServiceContractJPAMapper;
 import tech.zerofiltre.freeland.infra.providers.database.serviceContract.model.ServiceContractJPA;
 import java.util.Optional;
@@ -53,7 +53,7 @@ class ServiceContractDatabaseProviderTest {
   void registerContract_mustCallTheProperMethods() {
     //arrange
     ServiceContractJPA serviceContractJPA = new ServiceContractJPA();
-    ServiceContract serviceContract = new ServiceContract();
+    ServiceContract serviceContract = new ServiceContract.ServiceContractBuilder().build();
     when(mapper.toJPA(serviceContract)).thenReturn(serviceContractJPA);
 
     when(mapper.fromJPA(any())).thenReturn(serviceContract);

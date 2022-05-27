@@ -1,65 +1,98 @@
 package tech.zerofiltre.freeland.domain.client.model;
 
-import tech.zerofiltre.freeland.domain.Address;
+import tech.zerofiltre.freeland.domain.*;
+import tech.zerofiltre.freeland.domain.client.*;
+
+import java.util.*;
 
 
 public class Client {
 
-  private ClientId clientId;
-  private String description;
-  private String phoneNumber;
-  private Address address;
+    private ClientId clientId;
+    private String description;
+    private String phoneNumber;
+    private Address address;
 
-  public Client(ClientId clientId, String description, String phoneNumber,
-      Address address) {
-    this.clientId = clientId;
-    this.description = description;
-    this.phoneNumber = phoneNumber;
-    this.address = address;
-  }
+    private ClientProvider clientProvider;
 
-  public ClientId getClientId() {
-    return clientId;
-  }
 
-  private void setClientId(ClientId clientId) {
-    this.clientId = clientId;
-  }
+    private Client(ClientBuilder clientBuilder) {
+        this.clientId = clientBuilder.clientId;
+        this.description = clientBuilder.description;
+        this.phoneNumber = clientBuilder.phoneNumber;
+        this.address = clientBuilder.address;
+        this.clientProvider = clientBuilder.clientProvider;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public Client register(){
+        this.clientId = clientProvider.registerClient(this).getClientId();
+        return this;
+    }
 
-  private void setDescription(String description) {
-    this.description = description;
-  }
+    public static ClientBuilder builder() {
+        return new ClientBuilder();
+    }
 
-  public String getPhoneNumber() {
-    return phoneNumber;
-  }
+    public Optional<Client> of(ClientId clientId) {
+        Optional<Client> result = clientProvider.clientOfId(clientId);
+        result.ifPresent(client -> client.clientProvider = this.clientProvider);
+        return result;
+    }
 
-  private void setPhoneNumber(String phoneNumber) {
-    this.phoneNumber = phoneNumber;
-  }
+    public ClientId getClientId() {
+        return clientId;
+    }
 
-  public Address getAddress() {
-    return address;
-  }
+    public String getDescription() {
+        return description;
+    }
 
-  private void setAddress(Address address) {
-    this.address = address;
-  }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-  public Client register() {
-    return this;
-  }
+    public Address getAddress() {
+        return address;
+    }
 
-  public Client update() {
-    return this;
-  }
+    public static class ClientBuilder {
+        private ClientId clientId;
+        private String description;
+        private String phoneNumber;
+        private Address address;
 
-  public void delete() {
+        private ClientProvider clientProvider;
 
-  }
+        public ClientBuilder clientId(ClientId clientId) {
+            this.clientId = clientId;
+            return this;
+        }
+
+        public ClientBuilder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public ClientBuilder phoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+            return this;
+        }
+
+        public ClientBuilder address(Address address) {
+            this.address = address;
+            return this;
+        }
+
+        public ClientBuilder clientProvider(ClientProvider clientProvider) {
+            this.clientProvider = clientProvider;
+            return this;
+        }
+
+        public Client build() {
+            return new Client(this);
+        }
+
+    }
+
 
 }

@@ -18,4 +18,12 @@ public class CompanyId {
   public String getName() {
     return name;
   }
+
+  @Override
+  public String toString() {
+    return "CompanyId{" +
+            "siren='" + siren + '\'' +
+            ", name='" + name + '\'' +
+            '}';
+  }
 }

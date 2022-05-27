@@ -4,7 +4,7 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.*;
 import tech.zerofiltre.freeland.domain.*;
 import tech.zerofiltre.freeland.domain.client.model.*;
-import tech.zerofiltre.freeland.domain.serviceContract.model.*;
+import tech.zerofiltre.freeland.domain.servicecontract.model.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract.model.*;
 import tech.zerofiltre.freeland.infra.providers.database.client.*;
 import tech.zerofiltre.freeland.infra.providers.database.serviceContract.*;
@@ -23,28 +23,24 @@ public abstract class ServiceContractVMMapper {
     private WagePortageAgreementJPAMapper wagePortageAgreementJPAMapper;
 
 
-    @Mappings({
-            @Mapping(target = "serviceContractId", source = "contractNumber"),
-            @Mapping(target = "clientId", source = "clientSiren"),
-            @Mapping(target = "wagePortageAgreement", source = "wagePortageAgreementNumber"),
-    })
+    @Mapping(target = "serviceContractId", source = "contractNumber")
+    @Mapping(target = "clientId", source = "clientSiren")
+    @Mapping(target = "wagePortageAgreement", source = "wagePortageAgreementNumber")
     public abstract ServiceContract fromVM(ServiceContractVM serviceContractVM);
 
 
     @AfterMapping
-    public void addRate(@MappingTarget ServiceContract result, ServiceContractVM serviceContractVM) {
-        result.setRate(new Rate(serviceContractVM.getRateValue(), serviceContractVM.getRateCurrency(),
+    public void addRate(@MappingTarget ServiceContract.ServiceContractBuilder result, ServiceContractVM serviceContractVM) {
+        result.rate(new Rate(serviceContractVM.getRateValue(), serviceContractVM.getRateCurrency(),
                 serviceContractVM.getRateFrequency()));
     }
 
-    @Mappings({
-            @Mapping(target = "contractNumber", expression = "java(serviceContract.getServiceContractId().getContractNumber())"),
-            @Mapping(target = "rateValue", expression = "java(serviceContract.getRate().getValue())"),
-            @Mapping(target = "rateCurrency", expression = "java(serviceContract.getRate().getCurrency())"),
-            @Mapping(target = "rateFrequency", expression = "java(serviceContract.getRate().getFrequency())"),
-            @Mapping(target = "wagePortageAgreementNumber", source = "wagePortageAgreement"),
-            @Mapping(target = "clientSiren", source = "clientId")
-    })
+    @Mapping(target = "contractNumber", expression = "java(serviceContract.getServiceContractId().getContractNumber())")
+    @Mapping(target = "rateValue", expression = "java(serviceContract.getRate().getValue())")
+    @Mapping(target = "rateCurrency", expression = "java(serviceContract.getRate().getCurrency())")
+    @Mapping(target = "rateFrequency", expression = "java(serviceContract.getRate().getFrequency())")
+    @Mapping(target = "wagePortageAgreementNumber", source = "wagePortageAgreement")
+    @Mapping(target = "clientSiren", source = "clientId")
     public abstract ServiceContractVM toVM(ServiceContract serviceContract);
 
 

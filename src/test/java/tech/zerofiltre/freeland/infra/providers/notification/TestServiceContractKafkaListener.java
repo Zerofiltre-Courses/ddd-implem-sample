@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContractEvent;
+import tech.zerofiltre.freeland.domain.servicecontract.model.ServiceContractEvent;
 
 @Slf4j
 @Component

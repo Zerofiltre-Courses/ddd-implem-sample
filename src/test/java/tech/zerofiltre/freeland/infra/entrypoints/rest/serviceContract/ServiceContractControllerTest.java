@@ -14,9 +14,8 @@ import tech.zerofiltre.freeland.domain.agency.model.*;
 import tech.zerofiltre.freeland.domain.client.*;
 import tech.zerofiltre.freeland.domain.client.model.*;
 import tech.zerofiltre.freeland.domain.freelancer.model.*;
-import tech.zerofiltre.freeland.domain.serviceContract.model.*;
-import tech.zerofiltre.freeland.application.useCases.serviceContract.*;
-import tech.zerofiltre.freeland.application.useCases.wagePortageAgreement.*;
+import tech.zerofiltre.freeland.domain.servicecontract.*;
+import tech.zerofiltre.freeland.domain.servicecontract.model.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract.mapper.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract.model.*;
 
@@ -38,18 +37,14 @@ class ServiceContractControllerTest {
     public static final long AGREEMENT_NUMBER = 12L;
     public static final long CONTRACT_NUMBER = 13;
     public static final int RATE_VALUE = 700;
-    @Autowired
-    private MockMvc mockMvc;
-
     WagePortageAgreementVM agreementVM = new WagePortageAgreementVM();
-    WagePortageAgreement wagePortageAgreement = new WagePortageAgreement();
-
+    WagePortageAgreement wagePortageAgreement;
     ServiceContractVM serviceContractVM = new ServiceContractVM();
-    ServiceContract serviceContract = new ServiceContract();
-
+    ServiceContract serviceContract;
     @MockBean
     ServiceContractVMMapper mapper;
-
+    @Autowired
+    private MockMvc mockMvc;
     @MockBean
     private ClientProvider clientProvider;
     @MockBean
@@ -59,6 +54,9 @@ class ServiceContractControllerTest {
     @MockBean
     private ServiceContractNotificationProvider notificationProvider;
 
+    public static String asJsonString(final Object obj) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(obj);
+    }
 
     @BeforeEach
     void init() {
@@ -67,14 +65,18 @@ class ServiceContractControllerTest {
         agreementVM.setFreelancerSiren(FREELANCER_SIREN);
         agreementVM.setTerms(AGREEMENT_TERMS);
         agreementVM.setServiceFeesRate(SERVICE_FEES_RATE);
-
-        wagePortageAgreement.setWagePortageAgreementId(new WagePortageAgreementId(AGREEMENT_NUMBER));
         AgencyId agencyId = new AgencyId(AGENCY_SIREN, "");
-        wagePortageAgreement.setAgencyId(agencyId);
         FreelancerId freelancerId = new FreelancerId(FREELANCER_SIREN, "");
-        wagePortageAgreement.setFreelancerId(freelancerId);
-        wagePortageAgreement.setTerms(AGREEMENT_TERMS);
-        wagePortageAgreement.setServiceFeesRate(SERVICE_FEES_RATE);
+
+
+        wagePortageAgreement = WagePortageAgreement.builder()
+                .wagePortageAgreementProvider(wagePortageAgreementProvider)
+                .wagePortageAgreementId(new WagePortageAgreementId(AGREEMENT_NUMBER))
+                .agencyId(agencyId)
+                .freelancerId(freelancerId)
+                .terms(AGREEMENT_TERMS)
+                .serviceFeesRate(SERVICE_FEES_RATE)
+                .build();
 
         serviceContractVM.setContractNumber(CONTRACT_NUMBER);
         serviceContractVM.setClientSiren(CLIENT_SIREN);
@@ -84,29 +86,31 @@ class ServiceContractControllerTest {
         serviceContractVM.setRateValue(RATE_VALUE);
         serviceContractVM.setWagePortageAgreementNumber(AGREEMENT_NUMBER);
 
-        serviceContract.setServiceContractId(new ServiceContractId(CONTRACT_NUMBER));
-        serviceContract.setRate(new Rate(RATE_VALUE, Rate.Currency.EUR, Rate.Frequency.DAILY));
-        serviceContract.setTerms(CONTRACT_TERMS);
-        serviceContract.setClientId(new ClientId(CLIENT_SIREN, ""));
-        serviceContract.setWagePortageAgreement(new WagePortageAgreement(
-                new WagePortageAgreementId(AGREEMENT_NUMBER),
-                freelancerId,
-                agencyId,
-                SERVICE_FEES_RATE,
-                AGREEMENT_TERMS,
-                null,
-                null
-        ));
+        WagePortageAgreement wagePortageAgreement = WagePortageAgreement.builder()
+                .wagePortageAgreementId(new WagePortageAgreementId(AGREEMENT_NUMBER))
+                .freelancerId(freelancerId)
+                .agencyId(agencyId)
+                .serviceFeesRate(SERVICE_FEES_RATE)
+                .terms(AGREEMENT_TERMS)
+                .build();
+
+        serviceContract = ServiceContract.builder()
+                .serviceContractId(new ServiceContractId(CONTRACT_NUMBER))
+                .serviceContractProvider(serviceContractProvider)
+                .rate(new Rate(RATE_VALUE, Rate.Currency.EUR, Rate.Frequency.DAILY))
+                .terms(CONTRACT_TERMS)
+                .clientId(new ClientId(CLIENT_SIREN, ""))
+                .wagePortageAgreement(wagePortageAgreement).build();
 
 
     }
-
 
     @Test
     void whenValidInput_thenReturn200() throws Exception {
 
         //ARRANGE
-        when(clientProvider.clientOfId(any())).thenReturn(Optional.of(new Client()));
+        when(clientProvider.clientOfId(any()))
+                .thenReturn(Optional.of(Client.builder().clientProvider(clientProvider).build()));
         when(wagePortageAgreementProvider.wagePortageAgreementOfId(any())).thenReturn(Optional.of(wagePortageAgreement));
         doNothing().when(notificationProvider).notify(any());
         when(serviceContractProvider.registerContract(any())).thenReturn(serviceContract);
@@ -123,9 +127,5 @@ class ServiceContractControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.contractNumber").value(CONTRACT_NUMBER));
-    }
-
-    public static String asJsonString(final Object obj) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(obj);
     }
 }

@@ -20,13 +20,13 @@ public abstract class FreelancerVMMapper {
     public abstract Freelancer fromVM(FreelancerVM freelancerVM);
 
     @AfterMapping
-    Freelancer completeMapping(@MappingTarget Freelancer result, FreelancerVM freelancerVM) {
-        FreelancerId FreelancerId = new FreelancerId(freelancerVM.getSiren(), freelancerVM.getName());
-        result.setFreelancerId(FreelancerId);
+    Freelancer completeMapping(@MappingTarget Freelancer.FreelancerBuilder result, FreelancerVM freelancerVM) {
+        FreelancerId freelancerId = new FreelancerId(freelancerVM.getSiren(), freelancerVM.getName());
+        result.freelancerId(freelancerId);
         Address address = new Address(freelancerVM.getStreetNumber(), freelancerVM.getStreetName(), freelancerVM.getPostalCode(),
                 freelancerVM.getCity(), freelancerVM.getCountry());
-        result.setAddress(address);
-        return result;
+        result.address(address);
+        return result.build();
     }
 
 }

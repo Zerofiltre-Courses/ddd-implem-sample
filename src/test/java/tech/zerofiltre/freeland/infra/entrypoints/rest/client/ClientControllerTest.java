@@ -50,7 +50,7 @@ class ClientControllerTest {
     void whenValidInput_thenReturn200() throws Exception {
 
         //ARRANGE
-        when(clientProvider.registerClient(any())).thenReturn(new Client());
+        when(clientProvider.registerClient(any())).thenReturn(Client.builder().clientProvider(clientProvider).build());
         when(clientVMMapper.toVM(any())).thenReturn(clientVM);
 
         //ACT

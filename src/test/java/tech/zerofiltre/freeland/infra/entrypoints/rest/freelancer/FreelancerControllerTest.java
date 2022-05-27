@@ -9,10 +9,8 @@ import org.springframework.test.web.servlet.*;
 import org.springframework.test.web.servlet.request.*;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.*;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.*;
-import tech.zerofiltre.freeland.domain.agency.model.*;
 import tech.zerofiltre.freeland.domain.freelancer.*;
 import tech.zerofiltre.freeland.domain.freelancer.model.*;
-import tech.zerofiltre.freeland.infra.entrypoints.rest.agency.model.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.freelancer.mapper.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.freelancer.model.*;
 
@@ -52,7 +50,7 @@ class FreelancerControllerTest {
     void whenValidInput_thenReturn200() throws Exception {
 
         //ARRANGE
-        when(freelancerProvider.registerFreelancer(any())).thenReturn(new Freelancer());
+        when(freelancerProvider.registerFreelancer(any())).thenReturn(Freelancer.builder().freelancerProvider(freelancerProvider).build());
         when(freelancerVMMapper.toVM(any())).thenReturn(freelancerVM);
 
         //ACT

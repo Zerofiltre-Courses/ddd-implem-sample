@@ -3,7 +3,7 @@ package tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract.mapper;
 import org.mapstruct.*;
 import tech.zerofiltre.freeland.domain.agency.model.*;
 import tech.zerofiltre.freeland.domain.freelancer.model.*;
-import tech.zerofiltre.freeland.domain.serviceContract.model.*;
+import tech.zerofiltre.freeland.domain.servicecontract.model.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract.model.*;
 
 @Mapper(componentModel = "spring")

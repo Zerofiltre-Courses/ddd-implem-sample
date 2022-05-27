@@ -2,8 +2,8 @@ package tech.zerofiltre.freeland.infra.providers.database.serviceContract.mapper
 
 import tech.zerofiltre.freeland.domain.Rate;
 import tech.zerofiltre.freeland.domain.client.model.ClientId;
-import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContract;
-import tech.zerofiltre.freeland.domain.serviceContract.model.ServiceContractId;
+import tech.zerofiltre.freeland.domain.servicecontract.model.ServiceContract;
+import tech.zerofiltre.freeland.domain.servicecontract.model.ServiceContractId;
 import tech.zerofiltre.freeland.infra.providers.database.client.ClientJPARepository;
 import tech.zerofiltre.freeland.infra.providers.database.client.model.ClientJPA;
 import tech.zerofiltre.freeland.infra.providers.database.serviceContract.model.ServiceContractJPA;
@@ -28,13 +28,13 @@ public abstract class ServiceContractJPAMapper {
 
 
   @AfterMapping
-  public void addRate(@MappingTarget ServiceContract result, ServiceContractJPA serviceContractJPA) {
-    result.setRate(new Rate(serviceContractJPA.getRateValue(), serviceContractJPA.getRateCurrency(),
+  public void addRate(@MappingTarget ServiceContract.ServiceContractBuilder result, ServiceContractJPA serviceContractJPA) {
+    result.rate(new Rate(serviceContractJPA.getRateValue(), serviceContractJPA.getRateCurrency(),
         serviceContractJPA.getRateFrequency()));
   }
 
   @Mappings({
-      @Mapping(target = "contractNumber", expression = "java(serviceContract.getServiceContractId().getContractNumber())"),
+      @Mapping(target = "contractNumber", expression = "java(serviceContract.getServiceContractId()!=null?serviceContract.getServiceContractId().getContractNumber():null)"),
       @Mapping(target = "rateValue", expression = "java(serviceContract.getRate().getValue())"),
       @Mapping(target = "rateCurrency", expression = "java(serviceContract.getRate().getCurrency())"),
       @Mapping(target = "rateFrequency", expression = "java(serviceContract.getRate().getFrequency())"),

@@ -1,10 +1,11 @@
 package tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract;
 
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import tech.zerofiltre.freeland.application.servicecontract.*;
 import tech.zerofiltre.freeland.domain.client.*;
-import tech.zerofiltre.freeland.domain.serviceContract.model.*;
-import tech.zerofiltre.freeland.application.useCases.serviceContract.*;
-import tech.zerofiltre.freeland.application.useCases.wagePortageAgreement.*;
+import tech.zerofiltre.freeland.domain.servicecontract.*;
+import tech.zerofiltre.freeland.domain.servicecontract.model.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract.mapper.*;
 import tech.zerofiltre.freeland.infra.entrypoints.rest.serviceContract.model.*;
 
@@ -14,31 +15,23 @@ import javax.validation.*;
 @RequestMapping("service-contract")
 public class ServiceContractController {
 
-    private final StartServiceContract startServiceContract;
+    private final ServiceContractStarter serviceContractStarter;
     private final ServiceContractVMMapper mapper;
-    private final ClientProvider clientProvider;
-    private final WagePortageAgreementProvider wagePortageAgreementProvider;
-    private final ServiceContractProvider serviceContractProvider;
-    private final ServiceContractNotificationProvider notificationProvider;
 
 
     public ServiceContractController(ServiceContractVMMapper mapper, ClientProvider clientProvider, WagePortageAgreementProvider wagePortageAgreementProvider, ServiceContractProvider serviceContractProvider, ServiceContractNotificationProvider notificationProvider) {
         this.mapper = mapper;
-        this.clientProvider = clientProvider;
-        this.wagePortageAgreementProvider = wagePortageAgreementProvider;
-        this.serviceContractProvider = serviceContractProvider;
-        this.notificationProvider = notificationProvider;
-
-        this.startServiceContract = new StartServiceContract(
+        this.serviceContractStarter = new ServiceContractStarter(
                 clientProvider, wagePortageAgreementProvider, serviceContractProvider, notificationProvider);
 
     }
 
 
     @PostMapping("/start")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ServiceContractVM startServiceContract(@RequestBody @Valid ServiceContractVM serviceContractVM) throws StartServiceContractException {
         ServiceContract serviceContract = mapper.fromVM(serviceContractVM);
-        ServiceContract startedServiceContract = startServiceContract.execute(
+        ServiceContract startedServiceContract = serviceContractStarter.start(
                 serviceContract.getWagePortageAgreement().getWagePortageAgreementId(),
                 serviceContract.getClientId(),
                 serviceContract.getWagePortageAgreement().getTerms(),

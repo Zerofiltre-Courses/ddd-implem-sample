@@ -22,13 +22,13 @@ public abstract class AgencyVMMapper {
     public abstract Agency fromVM(AgencyVM agencyVM);
 
     @AfterMapping
-    Agency completeMapping(@MappingTarget Agency result, AgencyVM agencyVM) {
+    Agency completeMapping(@MappingTarget Agency.AgencyBuilder result, AgencyVM agencyVM) {
         AgencyId agencyId = new AgencyId(agencyVM.getSiren(), agencyVM.getName());
-        result.setAgencyId(agencyId);
+        result.agencyId(agencyId);
         Address address = new Address(agencyVM.getStreetNumber(), agencyVM.getStreetName(), agencyVM.getPostalCode(),
                 agencyVM.getCity(), agencyVM.getCountry());
-        result.setAddress(address);
-        return result;
+        result.address(address);
+        return result.build();
     }
 
 
